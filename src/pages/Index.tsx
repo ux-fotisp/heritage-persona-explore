@@ -135,32 +135,26 @@ const Index = () => {
           </Card>
 
           {/* Footer */}
-          <div className="border-t border-border pt-8 mt-12">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center md:text-left">
-              <div className="space-y-2">
-                <a href="/about" className="block text-muted-foreground hover:text-foreground transition-colors">
-                  About Us
-                </a>
-                <a href="/terms" className="block text-muted-foreground hover:text-foreground transition-colors">
-                  Terms & Services
-                </a>
-                <a href="/privacy" className="block text-muted-foreground hover:text-foreground transition-colors">
-                  Privacy
-                </a>
-              </div>
-              <div className="space-y-2">
-                <a href="/add-listings" className="block text-muted-foreground hover:text-foreground transition-colors">
-                  Add your listings
-                </a>
-                <a href="/faq" className="block text-muted-foreground hover:text-foreground transition-colors">
-                  FAQ
-                </a>
-              </div>
-              <div className="space-y-2 md:text-right">
-                <a href="/fotis" className="block text-muted-foreground hover:text-foreground transition-colors">
-                  FotisP
-                </a>
-              </div>
+          <div className="text-center space-y-8 text-sm text-muted-foreground">
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+              <a href="/about" className="hover:text-foreground transition-colors">
+                About Us
+              </a>
+              <a href="/terms" className="hover:text-foreground transition-colors">
+                Terms & Services
+              </a>
+              <a href="/privacy" className="hover:text-foreground transition-colors">
+                Privacy
+              </a>
+              <a href="/add-listings" className="hover:text-foreground transition-colors">
+                Add your listings
+              </a>
+              <a href="/faq" className="hover:text-foreground transition-colors">
+                FAQ
+              </a>
+              <a href="/fotis" className="hover:text-foreground transition-colors">
+                FotisP
+              </a>
             </div>
           </div>
         </div>
