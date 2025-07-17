@@ -114,6 +114,55 @@ const Index = () => {
               </Button>
             </CardContent>
           </Card>
+
+          {/* Need Support Section */}
+          <Card className="bg-card text-card-foreground border-0">
+            <CardContent className="p-8 text-center space-y-4">
+              <h2 className="text-2xl font-bold text-foreground">
+                Need Support?
+              </h2>
+              <p className="text-muted-foreground">
+                Contact us today by starting a chat
+              </p>
+              <Button 
+                size="lg"
+                onClick={() => navigate("/support")}
+                className="mt-4 bg-primary hover:bg-primary-hover text-primary-foreground rounded-full px-8 py-4"
+              >
+                Start your chat
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Footer */}
+          <div className="border-t border-border pt-8 mt-12">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center md:text-left">
+              <div className="space-y-2">
+                <a href="/about" className="block text-muted-foreground hover:text-foreground transition-colors">
+                  About Us
+                </a>
+                <a href="/terms" className="block text-muted-foreground hover:text-foreground transition-colors">
+                  Terms & Services
+                </a>
+                <a href="/privacy" className="block text-muted-foreground hover:text-foreground transition-colors">
+                  Privacy
+                </a>
+              </div>
+              <div className="space-y-2">
+                <a href="/add-listings" className="block text-muted-foreground hover:text-foreground transition-colors">
+                  Add your listings
+                </a>
+                <a href="/faq" className="block text-muted-foreground hover:text-foreground transition-colors">
+                  FAQ
+                </a>
+              </div>
+              <div className="space-y-2 md:text-right">
+                <a href="/fotis" className="block text-muted-foreground hover:text-foreground transition-colors">
+                  FotisP
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
