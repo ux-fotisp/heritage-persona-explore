@@ -10,22 +10,22 @@ const Index = () => {
     {
       icon: <Sparkles className="h-8 w-8 text-primary" />,
       title: "Personality Matching",
-      description: "Discover cultural sites that align with your unique persona and interests"
+      description: "Discover cultural sites that align with your unique character and interests"
     },
     {
-      icon: <MapPin className="h-8 w-8 text-sage" />,
-      title: "Curated Recommendations", 
-      description: "Explore handpicked heritage sites based on your cultural preferences"
+      icon: <MapPin className="h-8 w-8 text-primary" />,
+      title: "Tailor-mode recommendations", 
+      description: "From restaurants to museums. And churches to festivals. Your likings define the results."
     },
     {
-      icon: <Calendar className="h-8 w-8 text-coral" />,
-      title: "Smart Trip Planning",
-      description: "Plan meaningful cultural journeys with intelligent scheduling"
+      icon: <Calendar className="h-8 w-8 text-primary" />,
+      title: "Trip Planning",
+      description: "Choose your destination. Easily, clearly, based on you."
     },
     {
       icon: <BarChart3 className="h-8 w-8 text-primary" />,
       title: "Experience Evaluation",
-      description: "Reflect on and rate your cultural experiences for better recommendations"
+      description: "Our likings may chase and so do our travel choices. Rate and refine your results."
     }
   ];
 
@@ -54,25 +54,22 @@ const Index = () => {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col gap-4 justify-center max-w-xs mx-auto">
               <Button 
-                variant="hero" 
                 size="lg"
                 onClick={() => navigate("/onboarding")}
-                className="text-lg px-8 py-6"
+                className="text-lg px-8 py-4 bg-primary hover:bg-primary-hover text-primary-foreground rounded-full"
               >
-                Start Your Journey
-                <ArrowRight className="h-5 w-5" />
+                Start your journey
               </Button>
               
               <Button 
                 variant="outline" 
                 size="lg"
                 onClick={() => navigate("/discover")}
-                className="text-lg px-8 py-6"
+                className="text-lg px-8 py-4 border-2 border-foreground/20 text-foreground hover:bg-foreground/10 rounded-full"
               >
-                Explore Sites
-                <MapPin className="h-5 w-5" />
+                Explore sites in your area
               </Button>
             </div>
           </div>
@@ -100,22 +97,20 @@ const Index = () => {
           </div>
 
           {/* Call to Action */}
-          <Card className="bg-gradient-primary text-primary-foreground">
+          <Card className="bg-card text-card-foreground border-0">
             <CardContent className="p-8 text-center space-y-4">
-              <h2 className="text-2xl font-bold">
-                Ready to Begin Your Cultural Journey?
+              <h2 className="text-2xl font-bold text-foreground">
+                Are you ready to explore?
               </h2>
-              <p className="text-primary-foreground/90 max-w-md mx-auto">
-                Take our personality assessment to get personalized heritage site recommendations.
+              <p className="text-muted-foreground max-w-md mx-auto">
+                Take a tour to explore what we offer and start today
               </p>
               <Button 
-                variant="secondary"
                 size="lg"
                 onClick={() => navigate("/onboarding")}
-                className="mt-4"
+                className="mt-4 bg-primary hover:bg-primary-hover text-primary-foreground rounded-full px-8 py-4"
               >
-                Get Started Now
-                <Sparkles className="h-5 w-5" />
+                Start your chat
               </Button>
             </CardContent>
           </Card>

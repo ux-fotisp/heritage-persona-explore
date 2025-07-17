@@ -10,11 +10,11 @@
 
 @layer base {
   :root {
-    /* Core Brand Colors - Soft Pastel Purple */
-    --primary: 273 35% 78%;        /* Soft pastel purple */
+    /* Core Brand Colors - Dark Purple Theme */
+    --primary: 273 65% 70%;        /* Purple button color */
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 273 40% 72%;   /* Slightly deeper on hover */
-    --primary-glow: 273 45% 85%;    /* Lighter glow variant */
+    --primary-hover: 273 70% 75%;   /* Lighter on hover */
+    --primary-glow: 273 60% 65%;    /* Darker glow variant */
     
     /* Complementary Colors */
     --sage: 95 25% 75%;             /* Soft sage green */
@@ -22,23 +22,23 @@
     --coral: 15 70% 82%;            /* Soft coral accent */
     --coral-foreground: 15 35% 35%;
     
-    /* Neutral Base */
-    --background: 0 0% 100%;
-    --foreground: 273 8% 20%;       /* Deep purple-gray for text */
+    /* Dark Theme Base */
+    --background: 273 25% 15%;      /* Dark purple background */
+    --foreground: 0 0% 95%;         /* Light text */
     
     /* Surface Colors */
-    --card: 0 0% 100%;
-    --card-foreground: 273 8% 20%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 273 8% 20%;
+    --card: 273 20% 20%;            /* Dark purple card background */
+    --card-foreground: 0 0% 95%;    /* Light text on cards */
+    --popover: 273 20% 20%;
+    --popover-foreground: 0 0% 95%;
     
     /* Interactive States */
-    --secondary: 273 15% 96%;       /* Very light purple tint */
-    --secondary-foreground: 273 8% 20%;
-    --muted: 273 10% 95%;           /* Subtle purple background */
-    --muted-foreground: 273 5% 45%;
-    --accent: 95 20% 92%;           /* Light sage accent */
-    --accent-foreground: 95 15% 25%;
+    --secondary: 273 30% 25%;       /* Slightly lighter purple */
+    --secondary-foreground: 0 0% 95%;
+    --muted: 273 20% 18%;           /* Muted dark purple */
+    --muted-foreground: 0 0% 75%;   /* Muted light text */
+    --accent: 273 25% 22%;          /* Accent purple */
+    --accent-foreground: 0 0% 95%;
     
     /* Status Colors */
     --destructive: 0 65% 70%;       /* Soft coral-red */
@@ -49,15 +49,15 @@
     --success-foreground: 0 0% 100%;
     
     /* Border & Input */
-    --border: 273 15% 88%;
-    --input: 273 15% 88%;
-    --ring: 273 35% 78%;
+    --border: 273 20% 25%;          /* Purple borders */
+    --input: 273 20% 25%;
+    --ring: 273 65% 70%;
     
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-sage: linear-gradient(135deg, hsl(var(--sage)), hsl(95 30% 82%));
     --gradient-coral: linear-gradient(135deg, hsl(var(--coral)), hsl(15 75% 88%));
-    --gradient-hero: linear-gradient(180deg, hsl(var(--background)), hsl(273 15% 98%));
+    --gradient-hero: linear-gradient(180deg, hsl(var(--background)), hsl(273 20% 18%));
     
     /* Shadows */
     --shadow-soft: 0 4px 20px -4px hsl(var(--primary) / 0.15);
