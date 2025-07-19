@@ -1,12 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, MapPin, Calendar, User, BarChart3 } from "lucide-react";
+import { Search, Map, Star, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/", icon: Home, label: "Home" },
-  { href: "/discover", icon: MapPin, label: "Discover" },
-  { href: "/trips", icon: Calendar, label: "Trips" },
-  { href: "/dashboard", icon: BarChart3, label: "Insights" },
+  { href: "/search", icon: Search, label: "Search" },
+  { href: "/discover", icon: Map, label: "Explore" },
+  { href: "/suggest", icon: Star, label: "Suggest" },
   { href: "/profile", icon: User, label: "Profile" },
 ];
 
