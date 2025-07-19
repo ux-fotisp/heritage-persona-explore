@@ -2,18 +2,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AppHeader } from "@/components/navigation/AppHeader";
 import { Settings, MapPin, Calendar, Heart, Share } from "lucide-react";
 
 export default function Profile() {
   return (
-    <div className="flex flex-col min-h-screen bg-background p-4">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Profile</h1>
-        <Button variant="ghost" size="sm">
-          <Settings className="h-5 w-5" />
-        </Button>
-      </div>
+    <div className="flex flex-col min-h-screen bg-background">
+      <AppHeader showBackButton={false} title="Profile" />
+      <div className="p-4">
 
       {/* Profile Info */}
       <Card className="mb-6">
@@ -104,6 +100,7 @@ export default function Profile() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { AppHeader } from "@/components/navigation/AppHeader";
 import { Plus, MapPin, Camera, Clock, Users } from "lucide-react";
 
 const suggestionTypes = [
@@ -48,12 +49,14 @@ export default function Suggest() {
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background p-4">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Suggest New Places</h1>
-        <p className="text-muted-foreground">Help others discover amazing cultural heritage sites and experiences</p>
-      </div>
+    <div className="flex flex-col min-h-screen bg-background">
+      <AppHeader showBackButton={false} title="Suggest" />
+      <div className="p-4">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold mb-2">Suggest New Places</h1>
+          <p className="text-muted-foreground">Help others discover amazing cultural heritage sites and experiences</p>
+        </div>
 
       {/* Suggestion Types */}
       {!showForm && (
@@ -165,6 +168,7 @@ export default function Suggest() {
           <Plus className="h-6 w-6" />
         </Button>
       )}
+      </div>
     </div>
   );
 }

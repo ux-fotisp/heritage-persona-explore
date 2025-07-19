@@ -1,31 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BottomNav } from "@/components/navigation/BottomNav";
-import { Menu, ArrowLeft, Bell, Play } from "lucide-react";
+import { AppHeader } from "@/components/navigation/AppHeader";
+import { Play } from "lucide-react";
 
 export default function Onboarding() {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-8">
-        <button className="p-3 rounded-full bg-surface/20 backdrop-blur-sm">
-          <Menu className="h-6 w-6 text-foreground" />
-        </button>
-        
-        <button 
-          onClick={() => navigate("/")}
-          className="flex items-center gap-2 px-6 py-2 rounded-full bg-surface/20 backdrop-blur-sm border border-border"
-        >
-          <ArrowLeft className="h-4 w-4 text-foreground" />
-          <span className="text-foreground font-medium">Back</span>
-        </button>
-        
-        <button className="p-3 rounded-full bg-surface/20 backdrop-blur-sm">
-          <Bell className="h-6 w-6 text-foreground" />
-        </button>
-      </div>
+      <AppHeader backPath="/" />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 pb-24">

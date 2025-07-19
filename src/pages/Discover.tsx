@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { SiteCard } from "@/components/heritage/SiteCard";
 import { BottomNav } from "@/components/navigation/BottomNav";
+import { AppHeader } from "@/components/navigation/AppHeader";
 import { Search, Filter, MapPin } from "lucide-react";
 import heritageTemple from "@/assets/heritage-temple.jpg";
 import heritageMuseum from "@/assets/heritage-museum.jpg";
@@ -82,6 +83,7 @@ export default function Discover() {
 
   return (
     <div className="min-h-screen bg-background">
+      <AppHeader showBackButton={false} title="Discover" />
       <div className="container max-w-4xl mx-auto px-4 py-6 pb-20">
         {/* Header */}
         <div className="space-y-6">

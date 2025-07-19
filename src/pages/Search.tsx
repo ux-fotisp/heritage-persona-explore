@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AppHeader } from "@/components/navigation/AppHeader";
 
 const searchCategories = [
   { id: "all", label: "All", icon: SearchIcon },
@@ -61,6 +62,7 @@ export default function Search() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
+      <AppHeader showBackButton={false} title="Search" />
       {/* Header */}
       <div className="bg-primary text-primary-foreground p-4">
         <h1 className="text-2xl font-bold mb-4">Discover & Search</h1>
