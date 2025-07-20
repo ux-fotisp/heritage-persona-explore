@@ -21,6 +21,7 @@ export default {
 			fontFamily: {
 				sans: ['Comfortaa', 'system-ui', 'sans-serif'],
 				comfortaa: ['Comfortaa', 'system-ui', 'sans-serif'],
+				manrope: ['Manrope', 'system-ui', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

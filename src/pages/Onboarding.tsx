@@ -38,7 +38,7 @@ export default function Onboarding() {
           
           {/* CTA Button */}
           <Button 
-            onClick={() => navigate("/discover")}
+            onClick={() => navigate("/persona-questionnaire")}
             className="w-full py-4 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full h-auto"
           >
             Create My Travel Persona
