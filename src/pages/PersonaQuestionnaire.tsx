@@ -9,7 +9,8 @@ interface PersonaData {
   id: string;
   title: string;
   description: string;
-  traits: string[];
+  likes: string[];
+  dislikes: string[];
   icon: string;
   value: number;
 }
@@ -19,7 +20,18 @@ const initialPersonas: PersonaData[] = [
     id: "adventurer",
     title: "The Adventurer",
     description: "Seeking thrilling experiences and off-the-beaten-path discoveries in remote heritage sites",
-    traits: ["Bold", "Risk-taker", "Explorer", "Spontaneous"],
+    likes: [
+      "Exploring hidden ruins and secret locations",
+      "Hiking to remote archaeological sites", 
+      "Camping near heritage locations",
+      "Adventure sports in historical settings"
+    ],
+    dislikes: [
+      "Crowded tourist spots",
+      "Overly guided experiences",
+      "Staying in luxury hotels",
+      "Following strict itineraries"
+    ],
     icon: "🏔️",
     value: 0
   },
@@ -27,7 +39,18 @@ const initialPersonas: PersonaData[] = [
     id: "cultural-enthusiast", 
     title: "The Cultural Enthusiast",
     description: "Passionate about art, history, and immersing in local traditions and customs",
-    traits: ["Artistic", "Historical", "Cultured", "Refined"],
+    likes: [
+      "Museum visits and art galleries",
+      "Traditional craft workshops",
+      "Historical reenactments",
+      "Local festivals and ceremonies"
+    ],
+    dislikes: [
+      "Rushing through sites",
+      "Superficial tourist activities",
+      "Modern commercialized attractions",
+      "Loud, disruptive environments"
+    ],
     icon: "🎨",
     value: 0
   },
@@ -35,7 +58,18 @@ const initialPersonas: PersonaData[] = [
     id: "social-connector",
     title: "The Social Connector", 
     description: "Enjoys meeting people and sharing meaningful experiences with fellow travelers",
-    traits: ["Social", "Friendly", "Collaborative", "Outgoing"],
+    likes: [
+      "Group tours and activities",
+      "Meeting local communities",
+      "Sharing stories with other travelers",
+      "Cultural exchange programs"
+    ],
+    dislikes: [
+      "Solo exploration",
+      "Language barriers",
+      "Antisocial environments",
+      "Isolated locations"
+    ],
     icon: "👥",
     value: 0
   },
@@ -43,7 +77,18 @@ const initialPersonas: PersonaData[] = [
     id: "mindful-traveler",
     title: "The Mindful Traveler",
     description: "Values sustainable tourism and seeks deep, reflective connections with heritage",
-    traits: ["Conscious", "Reflective", "Sustainable", "Thoughtful"],
+    likes: [
+      "Eco-friendly accommodations",
+      "Supporting local communities",
+      "Meditation and reflection time",
+      "Learning about conservation efforts"
+    ],
+    dislikes: [
+      "Environmental damage",
+      "Overconsumption and waste",
+      "Disrespectful tourists",
+      "Mass tourism impacts"
+    ],
     icon: "🧘",
     value: 0
   },
@@ -51,7 +96,18 @@ const initialPersonas: PersonaData[] = [
     id: "comfort-seeker",
     title: "The Comfort Seeker",
     description: "Prefers well-planned visits to accessible heritage sites with modern amenities",
-    traits: ["Comfortable", "Planned", "Convenient", "Relaxed"],
+    likes: [
+      "Luxury accommodations",
+      "Professional guided tours",
+      "Air-conditioned transportation",
+      "Fine dining experiences"
+    ],
+    dislikes: [
+      "Rough camping conditions",
+      "Long hiking distances",
+      "Basic facilities",
+      "Unpredictable weather exposure"
+    ],
     icon: "💎",
     value: 0
   },
@@ -59,7 +115,18 @@ const initialPersonas: PersonaData[] = [
     id: "budget-explorer",
     title: "The Budget Explorer",
     description: "Finds incredible heritage experiences while being mindful of travel costs",
-    traits: ["Economical", "Resourceful", "Smart", "Practical"],
+    likes: [
+      "Free heritage sites and museums",
+      "Public transportation",
+      "Local street food",
+      "Budget accommodations"
+    ],
+    dislikes: [
+      "Expensive entrance fees",
+      "Luxury travel requirements",
+      "High-end restaurants",
+      "Private tour costs"
+    ],
     icon: "💰",
     value: 0
   },
@@ -67,7 +134,18 @@ const initialPersonas: PersonaData[] = [
     id: "heritage-hunter",
     title: "The Heritage Hunter",
     description: "Fascinated by UNESCO sites, ancient ruins, and archaeological discoveries",
-    traits: ["Historical", "Archaeological", "Educational", "Curious"],
+    likes: [
+      "UNESCO World Heritage sites",
+      "Archaeological excavations",
+      "Ancient civilizations",
+      "Historical documentation"
+    ],
+    dislikes: [
+      "Modern reconstructions",
+      "Commercialized historical sites",
+      "Inaccurate historical information",
+      "Rushed historical tours"
+    ],
     icon: "🏛️",
     value: 0
   },
@@ -75,7 +153,18 @@ const initialPersonas: PersonaData[] = [
     id: "nature-lover",
     title: "The Nature Lover",
     description: "Drawn to natural heritage sites, national parks, and scenic landscapes",
-    traits: ["Outdoorsy", "Environmental", "Peaceful", "Connected"],
+    likes: [
+      "Natural World Heritage sites",
+      "Wildlife observation",
+      "Scenic hiking trails",
+      "Environmental conservation"
+    ],
+    dislikes: [
+      "Urban heritage sites",
+      "Heavily developed areas",
+      "Indoor museums",
+      "Artificial attractions"
+    ],
     icon: "🌿",
     value: 0
   },
@@ -83,7 +172,18 @@ const initialPersonas: PersonaData[] = [
     id: "photo-enthusiast",
     title: "The Photo Enthusiast",
     description: "Seeks photogenic heritage locations and visually stunning architectural sites",
-    traits: ["Visual", "Creative", "Aesthetic", "Artistic"],
+    likes: [
+      "Golden hour photography",
+      "Architectural details",
+      "Panoramic viewpoints",
+      "Unique compositions"
+    ],
+    dislikes: [
+      "Photography restrictions",
+      "Crowded photo spots",
+      "Poor lighting conditions",
+      "Rushed photography time"
+    ],
     icon: "📸",
     value: 0
   },
@@ -91,7 +191,18 @@ const initialPersonas: PersonaData[] = [
     id: "knowledge-seeker",
     title: "The Knowledge Seeker",
     description: "Loves guided tours, museums, and gaining deep insights into cultural significance",
-    traits: ["Intellectual", "Studious", "Analytical", "Questioning"],
+    likes: [
+      "Expert-led educational tours",
+      "Historical research",
+      "Academic discussions",
+      "Detailed exhibitions"
+    ],
+    dislikes: [
+      "Surface-level information",
+      "Inaccurate historical facts",
+      "Rushed explanations",
+      "Entertainment over education"
+    ],
     icon: "📚",
     value: 0
   }
@@ -101,8 +212,8 @@ export default function PersonaQuestionnaire() {
   const navigate = useNavigate();
   const [personas, setPersonas] = useState<PersonaData[]>(initialPersonas);
   
-  const progress = (personas.filter(p => p.value > 0).length / personas.length) * 100;
-  const allCompleted = personas.every(p => p.value > 0);
+  const progress = (personas.filter(p => p.value !== 0).length / personas.length) * 100;
+  const allCompleted = personas.every(p => p.value !== 0);
 
   const updatePersonaValue = (id: string, value: number) => {
     setPersonas(prev => prev.map(persona => 
@@ -151,7 +262,7 @@ export default function PersonaQuestionnaire() {
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-foreground">Your Progress</span>
             <span className="text-sm font-medium text-primary">
-              {personas.filter(p => p.value > 0).length}/{personas.length}
+              {personas.filter(p => p.value !== 0).length}/{personas.length}
             </span>
           </div>
           <Progress value={progress} className="h-2 bg-muted" />
@@ -166,7 +277,8 @@ export default function PersonaQuestionnaire() {
             id={persona.id}
             title={persona.title}
             description={persona.description}
-            traits={persona.traits}
+            likes={persona.likes}
+            dislikes={persona.dislikes}
             icon={persona.icon}
             value={persona.value}
             onChange={(value) => updatePersonaValue(persona.id, value)}

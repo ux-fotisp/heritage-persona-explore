@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -9,7 +8,8 @@ interface PersonaCardProps {
   id: string;
   title: string;
   description: string;
-  traits: string[];
+  likes: string[];
+  dislikes: string[];
   icon: string;
   value: number;
   onChange: (value: number) => void;
@@ -20,19 +20,36 @@ export function PersonaCard({
   id,
   title,
   description,
-  traits,
+  likes,
+  dislikes,
   icon,
   value,
   onChange,
   className
 }: PersonaCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true); // Start expanded
+
+  const getValueLabel = (val: number) => {
+    if (val <= -3) return "Strongly Dislike";
+    if (val <= -1) return "Dislike";
+    if (val === 0) return "Neutral";
+    if (val <= 2) return "Like";
+    return "Strongly Like";
+  };
+
+  const getValueColor = (val: number) => {
+    if (val <= -3) return "bg-destructive/20 text-destructive-foreground";
+    if (val <= -1) return "bg-coral/20 text-coral-foreground";
+    if (val === 0) return "bg-muted/50 text-muted-foreground";
+    if (val <= 2) return "bg-primary/20 text-primary-foreground";
+    return "bg-success/20 text-success-foreground";
+  };
 
   return (
     <Card 
       className={cn(
         "transition-all duration-300 border border-border bg-card hover:shadow-card",
-        value > 0 && "ring-1 ring-primary/30 border-primary/20 bg-primary/[0.02]",
+        Math.abs(value) > 0 && "ring-1 ring-primary/30 border-primary/20 bg-primary/[0.02]",
         className
       )}
     >
@@ -69,19 +86,33 @@ export function PersonaCard({
           </div>
         </div>
 
-        {/* Expanded Traits Section */}
+        {/* Expanded Likes/Dislikes Section */}
         {isExpanded && (
-          <div className="mb-4 animate-accordion-down">
-            <div className="flex flex-wrap gap-2">
-              {traits.map((trait) => (
-                <Badge 
-                  key={trait} 
-                  variant="secondary" 
-                  className="text-xs px-2 py-1 bg-secondary/60 text-secondary-foreground"
-                >
-                  {trait}
-                </Badge>
-              ))}
+          <div className="mb-6 space-y-4 animate-accordion-down">
+            {/* Likes Section */}
+            <div>
+              <h4 className="text-sm font-medium text-foreground mb-2">Likes</h4>
+              <ul className="space-y-1">
+                {likes.map((like, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="text-success mt-0.5 text-xs">•</span>
+                    <span className="text-sm text-muted-foreground leading-relaxed">{like}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Dislikes Section */}
+            <div>
+              <h4 className="text-sm font-medium text-foreground mb-2">Dislikes</h4>
+              <ul className="space-y-1">
+                {dislikes.map((dislike, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="text-destructive mt-0.5 text-xs">•</span>
+                    <span className="text-sm text-muted-foreground leading-relaxed">{dislike}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         )}
@@ -94,13 +125,9 @@ export function PersonaCard({
             </span>
             <div className={cn(
               "px-2 py-1 rounded-md text-xs font-semibold transition-colors",
-              value === 0 ? "bg-muted/50 text-muted-foreground" :
-              value <= 3 ? "bg-coral/20 text-coral-foreground" :
-              value <= 6 ? "bg-secondary/30 text-secondary-foreground" :
-              value <= 8 ? "bg-primary/20 text-primary-foreground" :
-              "bg-success/20 text-success-foreground"
+              getValueColor(value)
             )}>
-              {value === 0 ? "Not rated" : `${value}/10`}
+              {getValueLabel(value)}
             </div>
           </div>
           
@@ -108,18 +135,27 @@ export function PersonaCard({
             <Slider
               value={[value]}
               onValueChange={(values) => onChange(values[0])}
-              max={10}
-              min={0}
+              max={5}
+              min={-5}
               step={1}
               className="w-full"
               onClick={(e) => e.stopPropagation()}
             />
             
-            {/* Scale markers */}
-            <div className="flex justify-between mt-2 px-1">
-              <span className="text-xs text-muted-foreground">0</span>
-              <span className="text-xs text-muted-foreground">5</span>
-              <span className="text-xs text-muted-foreground">10</span>
+            {/* Scale markers and labels */}
+            <div className="flex justify-between items-center mt-3 px-1">
+              <div className="flex flex-col items-start">
+                <span className="text-xs text-muted-foreground">-5</span>
+                <span className="text-xs text-muted-foreground font-medium">Strongly Dislike</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="text-xs text-muted-foreground">0</span>
+                <span className="text-xs text-muted-foreground font-medium">Neutral</span>
+              </div>
+              <div className="flex flex-col items-end">
+                <span className="text-xs text-muted-foreground">5</span>
+                <span className="text-xs text-muted-foreground font-medium">Strongly Like</span>
+              </div>
             </div>
           </div>
         </div>
