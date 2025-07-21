@@ -17,193 +17,187 @@ interface PersonaData {
 
 const initialPersonas: PersonaData[] = [
   {
-    id: "adventurer",
-    title: "The Adventurer",
-    description: "Seeking thrilling experiences and off-the-beaten-path discoveries in remote heritage sites",
+    id: "archaeologist",
+    title: "Archaeologist",
+    description: "Seeks depth, not just sights. Fascinated by ancient civilizations, layered histories, and the stories buried beneath the surface.",
     likes: [
-      "Exploring hidden ruins and secret locations",
-      "Hiking to remote archaeological sites", 
-      "Camping near heritage locations",
-      "Adventure sports in historical settings"
+      "Ancient ruins",
+      "Museums and archives",
+      "Cultural preservation",
+      "Historical Depth",
+      "Hidden Trails",
+      "Meanings in artifacts"
     ],
     dislikes: [
-      "Crowded tourist spots",
-      "Overly guided experiences",
-      "Staying in luxury hotels",
-      "Following strict itineraries"
-    ],
-    icon: "🏔️",
-    value: 0
-  },
-  {
-    id: "cultural-enthusiast", 
-    title: "The Cultural Enthusiast",
-    description: "Passionate about art, history, and immersing in local traditions and customs",
-    likes: [
-      "Museum visits and art galleries",
-      "Traditional craft workshops",
-      "Historical reenactments",
-      "Local festivals and ceremonies"
-    ],
-    dislikes: [
-      "Rushing through sites",
-      "Superficial tourist activities",
-      "Modern commercialized attractions",
-      "Loud, disruptive environments"
-    ],
-    icon: "🎨",
-    value: 0
-  },
-  {
-    id: "social-connector",
-    title: "The Social Connector", 
-    description: "Enjoys meeting people and sharing meaningful experiences with fellow travelers",
-    likes: [
-      "Group tours and activities",
-      "Meeting local communities",
-      "Sharing stories with other travelers",
-      "Cultural exchange programs"
-    ],
-    dislikes: [
-      "Solo exploration",
-      "Language barriers",
-      "Antisocial environments",
-      "Isolated locations"
-    ],
-    icon: "👥",
-    value: 0
-  },
-  {
-    id: "mindful-traveler",
-    title: "The Mindful Traveler",
-    description: "Values sustainable tourism and seeks deep, reflective connections with heritage",
-    likes: [
-      "Eco-friendly accommodations",
-      "Supporting local communities",
-      "Meditation and reflection time",
-      "Learning about conservation efforts"
-    ],
-    dislikes: [
-      "Environmental damage",
-      "Overconsumption and waste",
-      "Disrespectful tourists",
-      "Mass tourism impacts"
-    ],
-    icon: "🧘",
-    value: 0
-  },
-  {
-    id: "comfort-seeker",
-    title: "The Comfort Seeker",
-    description: "Prefers well-planned visits to accessible heritage sites with modern amenities",
-    likes: [
-      "Luxury accommodations",
-      "Professional guided tours",
-      "Air-conditioned transportation",
-      "Fine dining experiences"
-    ],
-    dislikes: [
-      "Rough camping conditions",
-      "Long hiking distances",
-      "Basic facilities",
-      "Unpredictable weather exposure"
-    ],
-    icon: "💎",
-    value: 0
-  },
-  {
-    id: "budget-explorer",
-    title: "The Budget Explorer",
-    description: "Finds incredible heritage experiences while being mindful of travel costs",
-    likes: [
-      "Free heritage sites and museums",
-      "Public transportation",
-      "Local street food",
-      "Budget accommodations"
-    ],
-    dislikes: [
-      "Expensive entrance fees",
-      "Luxury travel requirements",
-      "High-end restaurants",
-      "Private tour costs"
-    ],
-    icon: "💰",
-    value: 0
-  },
-  {
-    id: "heritage-hunter",
-    title: "The Heritage Hunter",
-    description: "Fascinated by UNESCO sites, ancient ruins, and archaeological discoveries",
-    likes: [
-      "UNESCO World Heritage sites",
-      "Archaeological excavations",
-      "Ancient civilizations",
-      "Historical documentation"
-    ],
-    dislikes: [
-      "Modern reconstructions",
-      "Commercialized historical sites",
-      "Inaccurate historical information",
-      "Rushed historical tours"
+      "Leisure tourism",
+      "Overly staged photo ops",
+      "Trendy food spots",
+      "Shoping Hubs",
+      "Party Scenes",
+      "Sports Activites"
     ],
     icon: "🏛️",
     value: 0
   },
   {
-    id: "nature-lover",
-    title: "The Nature Lover",
-    description: "Drawn to natural heritage sites, national parks, and scenic landscapes",
+    id: "religious-seeker",
+    title: "Religious Seeker",
+    description: "Travels with purpose—seeking spiritual insight, sacred spaces, and deeper understanding of self through religious and cultural traditions.",
     likes: [
-      "Natural World Heritage sites",
-      "Wildlife observation",
-      "Scenic hiking trails",
-      "Environmental conservation"
+      "Pilgrimage paths",
+      "Rituals & symbolism",
+      "Quiet reflection",
+      "Religious history",
+      "Sacred sites",
+      "Tranquil settings"
     ],
     dislikes: [
-      "Urban heritage sites",
-      "Heavily developed areas",
-      "Indoor museums",
-      "Artificial attractions"
+      "Crowded places",
+      "Tourist spectacle zones",
+      "Modern pop culture",
+      "Party environments",
+      "Sports tourism",
+      "Fine dining trends"
+    ],
+    icon: "🙏",
+    value: 0
+  },
+  {
+    id: "art-seeker",
+    title: "Art Seeker",
+    description: "Travels to be inspired—drawn to galleries, exhibitions, and the beauty of human expression across time and cultures.",
+    likes: [
+      "Art exhibitions",
+      "Fine arts & performances",
+      "Learning from travel",
+      "Local art scenes",
+      "Cultural institutions",
+      "Creative Spirit"
+    ],
+    dislikes: [
+      "Sports Events",
+      "Archaeological hotspots",
+      "Culinary Tourism",
+      "Party culture",
+      "Shopping Malls",
+      "Sea & sun tourism"
+    ],
+    icon: "🎨",
+    value: 0
+  },
+  {
+    id: "naturalist",
+    title: "Naturalist",
+    description: "Seeks peace in nature—drawn to quiet landscapes, fresh air, and moments of stillness that restore balance between body and spirit.",
+    likes: [
+      "Natural silence",
+      "Fresh air & open skies",
+      "Slow-paced walks",
+      "Tranquil settings",
+      "Scenic views",
+      "Mindful solitude"
+    ],
+    dislikes: [
+      "Loud environments",
+      "Popular Malls",
+      "Overcrowded landmarks",
+      "Industrial areas",
+      "Large cities",
+      "Mass tourism spots"
     ],
     icon: "🌿",
     value: 0
   },
   {
-    id: "photo-enthusiast",
-    title: "The Photo Enthusiast",
-    description: "Seeks photogenic heritage locations and visually stunning architectural sites",
+    id: "gourmand",
+    title: "Gourmand",
+    description: "Travels to indulge—drawn to refined tastes, exclusive experiences, and the joy of savoring life through food, drink, and high-end social scenes.",
     likes: [
-      "Golden hour photography",
-      "Architectural details",
-      "Panoramic viewpoints",
-      "Unique compositions"
+      "Fine Dining",
+      "Elite destinations",
+      "Wine tastings",
+      "Yacht parties",
+      "Culinary artistry",
+      "Celebrity events"
     ],
     dislikes: [
-      "Photography restrictions",
-      "Crowded photo spots",
-      "Poor lighting conditions",
-      "Rushed photography time"
+      "Quiet retreats",
+      "Traditional folk events",
+      "Last-minute deals",
+      "Take-away meals",
+      "Budget travel",
+      "Rustic simplicity"
     ],
-    icon: "📸",
+    icon: "🍷",
     value: 0
   },
   {
-    id: "knowledge-seeker",
-    title: "The Knowledge Seeker",
-    description: "Loves guided tours, museums, and gaining deep insights into cultural significance",
+    id: "traditionalist",
+    title: "Traditionalist",
+    description: "Travels to live like a local—drawn to authentic experiences, native customs, and the everyday rhythms of real communities.",
     likes: [
-      "Expert-led educational tours",
-      "Historical research",
-      "Academic discussions",
-      "Detailed exhibitions"
+      "Living like native",
+      "Meeting Locals",
+      "Local Cuisine",
+      "Speaking the language",
+      "Off-map villages",
+      "Cultural Immersion"
     ],
     dislikes: [
-      "Surface-level information",
-      "Inaccurate historical facts",
-      "Rushed explanations",
-      "Entertainment over education"
+      "Tourist routes",
+      "Over-curated experiences",
+      "Modern Entertainment",
+      "Big Club Venues",
+      "VIP Parties",
+      "Branded shopping areas"
     ],
-    icon: "📚",
+    icon: "🏘️",
+    value: 0
+  },
+  {
+    id: "viral-seeker",
+    title: "Viral Seeker",
+    description: "Travels for the thrill and the spotlight—drawn to iconic landmarks, nightlife, and the kind of moments that light up social feeds.",
+    likes: [
+      "City highlights",
+      "Nightlife & parties",
+      "Trendy clubs",
+      "Famous landmarks",
+      "Viral moments",
+      "Social events"
+    ],
+    dislikes: [
+      "Nature Trails",
+      "Heritage Immersion",
+      "Cultural deep dives",
+      "Quiet retreats",
+      "Traditional Events",
+      "Rural escapes"
+    ],
+    icon: "📱",
+    value: 0
+  },
+  {
+    id: "leisure-seeker",
+    title: "Leisure Seeker",
+    description: "Travels to unwind—drawn to warm places, peaceful settings, and activities that nourish the body and calm the mind.",
+    likes: [
+      "Sunbathing",
+      "Warm Destinations",
+      "Relaxation Spots",
+      "Fitness & Wellness",
+      "Outdoor Sports",
+      "Beach Time"
+    ],
+    dislikes: [
+      "Cultural events",
+      "Knowledge travel",
+      "Educational tours",
+      "Urban sightseeing",
+      "Packed itineraries",
+      "Museums & galleries"
+    ],
+    icon: "🏖️",
     value: 0
   }
 ];
@@ -223,9 +217,9 @@ export default function PersonaQuestionnaire() {
 
   const handleComplete = () => {
     const sortedPersonas = [...personas].sort((a, b) => b.value - a.value);
-    const topPersonas = sortedPersonas.slice(0, 2);
+    const topPersonas = sortedPersonas.slice(0, 3); // Show top 3 for better selection
     
-    navigate("/persona-results", { 
+    navigate("/persona-selection", { 
       state: { 
         topPersonas,
         allPersonas: personas 
@@ -251,8 +245,8 @@ export default function PersonaQuestionnaire() {
               <span className="text-primary">Travel Style</span>
             </h1>
             
-            <p className="text-muted-foreground text-sm leading-relaxed max-w-xs mx-auto">
-              Let's shape your travel persona so we can match you with heritage sites that truly fit your style.
+            <p className="text-muted-foreground text-sm leading-relaxed max-w-sm mx-auto">
+              Let's shape your travel persona so we can match you with heritage sites that truly fit your style. Take a moment to reflect on each travel persona. Which ones feel most like you—and which don't? Your ratings will help us fine-tune your cultural journey to match what truly resonates with you.
             </p>
           </div>
         </div>
