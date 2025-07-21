@@ -31,9 +31,17 @@ export default function Onboarding() {
               <span className="text-primary">Travel Style</span>
             </h1>
             
-            <p className="text-muted-foreground leading-relaxed">
-              Let's shape your travel persona so we can match you with heritage sites that truly fit your style.
-            </p>
+            <div className="space-y-4 text-muted-foreground leading-relaxed">
+              <p>
+                Let's shape your travel persona so we can match you with heritage sites that truly fit your style.
+              </p>
+              <p>
+                Take a moment to reflect on each travel persona. Which ones feel most like you—and which don't?
+              </p>
+              <p>
+                Your ratings will help us fine-tune your cultural journey to match what truly resonates with you.
+              </p>
+            </div>
           </div>
           
           {/* CTA Button */}

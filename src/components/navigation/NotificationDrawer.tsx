@@ -85,8 +85,8 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
   };
 
   return (
-    <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="h-[90vh]">
+    <Drawer open={isOpen} onOpenChange={onClose} direction="right">
+      <DrawerContent className="h-[90vh] max-w-sm ml-auto">
         <DrawerHeader className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <DrawerTitle className="text-xl font-bold">Notifications</DrawerTitle>
@@ -122,7 +122,7 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
               {notifications.map((notification, index) => (
                 <div key={notification.id}>
                   <div
-                    className={`flex items-start gap-3 p-4 rounded-lg transition-colors hover:bg-muted/50 ${
+                    className={`group flex items-start gap-3 p-4 rounded-lg transition-colors hover:bg-muted/50 ${
                       notification.unread ? "bg-muted/30" : ""
                     }`}
                   >
@@ -150,10 +150,10 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="h-6 w-6 hover:bg-destructive/10 hover:text-destructive"
                           onClick={() => handleDeleteNotification(notification.id)}
                         >
-                          <Trash2 className="h-3 w-3" />
+                          <X className="h-3 w-3" />
                         </Button>
                       </div>
                       <p className="text-sm text-muted-foreground">

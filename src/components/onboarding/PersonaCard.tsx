@@ -90,29 +90,35 @@ export function PersonaCard({
         {isExpanded && (
           <div className="mb-6 space-y-4 animate-accordion-down">
             {/* Likes Section */}
-            <div>
-              <h4 className="text-sm font-medium text-foreground mb-2">Likes</h4>
-              <ul className="space-y-1">
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium text-foreground">Likes</h4>
+              <div className="flex flex-wrap gap-2">
                 {likes.map((like, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-success mt-0.5 text-xs">•</span>
-                    <span className="text-sm text-muted-foreground leading-relaxed">{like}</span>
-                  </li>
+                  <span 
+                    key={index} 
+                    className="px-3 py-1.5 rounded-full text-sm font-medium text-white"
+                    style={{ backgroundColor: '#31543F' }}
+                  >
+                    {like}
+                  </span>
                 ))}
-              </ul>
+              </div>
             </div>
 
             {/* Dislikes Section */}
-            <div>
-              <h4 className="text-sm font-medium text-foreground mb-2">Dislikes</h4>
-              <ul className="space-y-1">
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium text-foreground">Dislikes</h4>
+              <div className="flex flex-wrap gap-2">
                 {dislikes.map((dislike, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-destructive mt-0.5 text-xs">•</span>
-                    <span className="text-sm text-muted-foreground leading-relaxed">{dislike}</span>
-                  </li>
+                  <span 
+                    key={index} 
+                    className="px-3 py-1.5 rounded-full text-sm font-medium text-white"
+                    style={{ backgroundColor: '#744444' }}
+                  >
+                    {dislike}
+                  </span>
                 ))}
-              </ul>
+              </div>
             </div>
           </div>
         )}

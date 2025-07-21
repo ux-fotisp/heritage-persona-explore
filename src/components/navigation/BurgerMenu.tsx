@@ -50,8 +50,8 @@ export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
   };
 
   return (
-    <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="h-[90vh]">
+    <Drawer open={isOpen} onOpenChange={onClose} direction="left">
+      <DrawerContent className="h-[90vh] max-w-sm">
         <DrawerHeader className="flex items-center justify-between">
           <DrawerTitle className="text-xl font-bold">Menu</DrawerTitle>
           <DrawerClose asChild>
