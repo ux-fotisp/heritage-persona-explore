@@ -7,6 +7,7 @@ import { BottomNav } from "@/components/navigation/BottomNav";
 import Index from "./pages/Index";
 import Onboarding from "./pages/Onboarding";
 import PersonaQuestionnaire from "./pages/PersonaQuestionnaire";
+import PersonaSelection from "./pages/PersonaSelection";
 import PersonaResults from "./pages/PersonaResults";
 import Discover from "./pages/Discover";
 import Search from "./pages/Search";
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/persona-questionnaire" element={<PersonaQuestionnaire />} />
+            <Route path="/persona-selection" element={<PersonaSelection />} />
             <Route path="/persona-results" element={<PersonaResults />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/search" element={<Search />} />

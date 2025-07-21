@@ -205,14 +205,16 @@ const initialPersonas: PersonaData[] = [
 export default function PersonaQuestionnaire() {
   const navigate = useNavigate();
   const [personas, setPersonas] = useState<PersonaData[]>(initialPersonas);
+  const [hasInteracted, setHasInteracted] = useState<Set<string>>(new Set());
   
-  const progress = (personas.filter(p => p.value !== 0).length / personas.length) * 100;
-  const allCompleted = personas.every(p => p.value !== 0);
+  const progress = (hasInteracted.size / personas.length) * 100;
+  const allCompleted = hasInteracted.size === personas.length;
 
   const updatePersonaValue = (id: string, value: number) => {
     setPersonas(prev => prev.map(persona => 
       persona.id === id ? { ...persona, value } : persona
     ));
+    setHasInteracted(prev => new Set([...prev, id]));
   };
 
   const handleComplete = () => {
@@ -256,7 +258,7 @@ export default function PersonaQuestionnaire() {
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-foreground">Your Progress</span>
             <span className="text-sm font-medium text-primary">
-              {personas.filter(p => p.value !== 0).length}/{personas.length}
+              {hasInteracted.size}/{personas.length}
             </span>
           </div>
           <Progress value={progress} className="h-2 bg-muted" />
@@ -290,7 +292,7 @@ export default function PersonaQuestionnaire() {
         >
           {allCompleted 
             ? "Create My Travel Persona" 
-            : `Complete ${personas.filter(p => p.value === 0).length} more to continue`
+            : `Complete ${personas.length - hasInteracted.size} more to continue`
           }
         </Button>
       </div>
