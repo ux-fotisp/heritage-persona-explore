@@ -10,6 +10,9 @@ import PersonaQuestionnaire from "./pages/PersonaQuestionnaire";
 import PersonaSelection from "./pages/PersonaSelection";
 import PersonaConfirmation from "./pages/PersonaConfirmation";
 import PersonaResults from "./pages/PersonaResults";
+import Blog from "./pages/Blog";
+import About from "./pages/About";
+import Favorites from "./pages/Favorites";
 import Discover from "./pages/Discover";
 import Search from "./pages/Search";
 import Profile from "./pages/Profile";
@@ -36,6 +39,9 @@ const App = () => (
             <Route path="/search" element={<Search />} />
             <Route path="/suggest" element={<Suggest />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/favorites" element={<Favorites />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
