@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Onboarding from "./pages/Onboarding";
 import PersonaQuestionnaire from "./pages/PersonaQuestionnaire";
 import PersonaSelection from "./pages/PersonaSelection";
+import PersonaConfirmation from "./pages/PersonaConfirmation";
 import PersonaResults from "./pages/PersonaResults";
 import Discover from "./pages/Discover";
 import Search from "./pages/Search";
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/persona-questionnaire" element={<PersonaQuestionnaire />} />
             <Route path="/persona-selection" element={<PersonaSelection />} />
+            <Route path="/persona-confirmation" element={<PersonaConfirmation />} />
             <Route path="/persona-results" element={<PersonaResults />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/search" element={<Search />} />

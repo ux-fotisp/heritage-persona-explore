@@ -66,9 +66,11 @@ export function PersonaCard({
                 <h3 className="font-semibold text-base text-foreground leading-tight mb-1">
                   {title}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {description}
-                </p>
+                {isExpanded && (
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {description}
+                  </p>
+                )}
               </div>
               
               <button
@@ -124,47 +126,49 @@ export function PersonaCard({
         )}
 
         {/* Slider Section */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-foreground">
-              How much do you relate to this?
-            </span>
-            <div className={cn(
-              "px-2 py-1 rounded-md text-xs font-semibold transition-colors",
-              getValueColor(value)
-            )}>
-              {getValueLabel(value)}
+        {isExpanded && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-foreground">
+                How much do you relate to this?
+              </span>
+              <div className={cn(
+                "px-2 py-1 rounded-md text-xs font-semibold transition-colors",
+                getValueColor(value)
+              )}>
+                {getValueLabel(value)}
+              </div>
             </div>
-          </div>
-          
-          <div className="relative">
-            <Slider
-              value={[value]}
-              onValueChange={(values) => onChange(values[0])}
-              max={5}
-              min={-5}
-              step={1}
-              className="w-full"
-              onClick={(e) => e.stopPropagation()}
-            />
             
-            {/* Scale markers and labels */}
-            <div className="flex justify-between items-center mt-3 px-1">
-              <div className="flex flex-col items-start">
-                <span className="text-xs text-muted-foreground">-5</span>
-                <span className="text-xs text-muted-foreground font-medium">Strongly Dislike</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="text-xs text-muted-foreground">0</span>
-                <span className="text-xs text-muted-foreground font-medium">Neutral</span>
-              </div>
-              <div className="flex flex-col items-end">
-                <span className="text-xs text-muted-foreground">5</span>
-                <span className="text-xs text-muted-foreground font-medium">Strongly Like</span>
+            <div className="relative">
+              <Slider
+                value={[value]}
+                onValueChange={(values) => onChange(values[0])}
+                max={5}
+                min={-5}
+                step={1}
+                className="w-full"
+                onClick={(e) => e.stopPropagation()}
+              />
+              
+              {/* Scale markers and labels */}
+              <div className="flex justify-between items-center mt-3 px-1">
+                <div className="flex flex-col items-start">
+                  <span className="text-xs text-muted-foreground">-5</span>
+                  <span className="text-xs text-muted-foreground font-medium">Strongly Dislike</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-xs text-muted-foreground">0</span>
+                  <span className="text-xs text-muted-foreground font-medium">Neutral</span>
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="text-xs text-muted-foreground">5</span>
+                  <span className="text-xs text-muted-foreground font-medium">Strongly Like</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );

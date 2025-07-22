@@ -45,7 +45,7 @@ export default function PersonaSelection() {
 
   const handleContinue = () => {
     const selected = allPersonas.filter((p: PersonaData) => selectedPersonas.includes(p.id));
-    navigate("/persona-results", { 
+    navigate("/persona-confirmation", { 
       state: { 
         selectedPersonas: selected,
         allPersonas 
@@ -75,8 +75,16 @@ export default function PersonaSelection() {
             </h1>
             
             <p className="text-muted-foreground text-sm leading-relaxed max-w-sm mx-auto">
-              Based on your ratings, here are your top persona matches. Select one or two that best represent you.
+              Based on your ratings, here are your top persona matches. Select up to 2 personas that best represent you.
             </p>
+            
+            {selectedPersonas.length > 0 && (
+              <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-success/10 border border-success/20 mt-2">
+                <span className="text-success font-medium text-xs">
+                  {selectedPersonas.length}/2 personas selected
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -102,31 +110,35 @@ export default function PersonaSelection() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
+                      {/* Accuracy Badge - Moved above title and made bigger */}
+                      <div className="mb-2">
+                        <Badge 
+                          variant="secondary" 
+                          className="bg-primary/10 text-primary border-primary/20 text-base px-3 py-1 font-semibold"
+                        >
+                          {getAccuracyPercentage(persona)}% Match
+                        </Badge>
+                      </div>
+                      
                       <h3 className="font-semibold text-lg text-foreground leading-tight mb-1">
                         {persona.title}
                       </h3>
                       <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                         {persona.description}
                       </p>
-                      
-                      {/* Accuracy Badge */}
-                      <Badge 
-                        variant="secondary" 
-                        className="bg-primary/10 text-primary border-primary/20"
-                      >
-                        {getAccuracyPercentage(persona)}% Match
-                      </Badge>
                     </div>
                     
-                    {/* Selection Indicator */}
+                    {/* Selection Indicator with Number */}
                     <div className={cn(
-                      "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors",
+                      "w-8 h-8 rounded-full border-2 flex items-center justify-center transition-colors font-semibold text-sm",
                       selectedPersonas.includes(persona.id) 
                         ? "bg-primary border-primary text-primary-foreground" 
                         : "border-muted-foreground/30"
                     )}>
-                      {selectedPersonas.includes(persona.id) && (
-                        <Check className="h-4 w-4" />
+                      {selectedPersonas.includes(persona.id) ? (
+                        selectedPersonas.indexOf(persona.id) + 1
+                      ) : (
+                        ""
                       )}
                     </div>
                   </div>
