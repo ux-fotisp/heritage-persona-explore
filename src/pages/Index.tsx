@@ -137,9 +137,12 @@ const Index = () => {
           {/* Footer */}
           <div className="text-center space-y-8 text-sm text-muted-foreground">
             <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
-              <a href="/about" className="hover:text-foreground transition-colors">
-                About Us
-              </a>
+              <button 
+                onClick={() => navigate("/about")} 
+                className="hover:text-foreground transition-colors cursor-pointer"
+              >
+                About This App
+              </button>
               <a href="/terms" className="hover:text-foreground transition-colors">
                 Terms & Services
               </a>

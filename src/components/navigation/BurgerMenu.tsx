@@ -33,6 +33,7 @@ const menuItems = [
   { icon: MapPin, label: "My Trips", path: "/trips", description: "Manage your travel itineraries" },
   { icon: Heart, label: "Favorites", path: "/favorites", description: "Your saved heritage sites" },
   { icon: Calendar, label: "Events", path: "/events", description: "Cultural events and festivals" },
+  { icon: HelpCircle, label: "About This App", path: "/about", description: "Learn about our research project" },
 ];
 
 const secondaryItems = [
