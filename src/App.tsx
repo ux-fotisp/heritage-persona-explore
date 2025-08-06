@@ -13,6 +13,8 @@ import PersonaResults from "./pages/PersonaResults";
 import Blog from "./pages/Blog";
 import About from "./pages/About";
 import Favorites from "./pages/Favorites";
+import Planner from "./pages/Planner";
+import Explore from "./pages/Explore";
 import Discover from "./pages/Discover";
 import Search from "./pages/Search";
 import Profile from "./pages/Profile";
@@ -38,6 +40,8 @@ const App = () => (
             <Route path="/discover" element={<Discover />} />
             <Route path="/search" element={<Search />} />
             <Route path="/suggest" element={<Suggest />} />
+            <Route path="/planner" element={<Planner />} />
+            <Route path="/explore" element={<Explore />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/about" element={<About />} />
