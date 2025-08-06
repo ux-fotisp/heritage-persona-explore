@@ -29,8 +29,6 @@ interface BurgerMenuProps {
 const menuItems = [
   { icon: FileText, label: "Blog Posts", path: "/blog", description: "Latest travel stories and guides" },
   { icon: Star, label: "Popular Ratings", path: "/ratings", description: "Top-rated sites and experiences" },
-  { icon: Users, label: "Community", path: "/community", description: "Connect with fellow travelers" },
-  { icon: MapPin, label: "Trip Planner", path: "/planner", description: "Plan your cultural adventure" },
   { icon: MapPin, label: "My Trips", path: "/trips", description: "Manage your travel itineraries" },
   { icon: Heart, label: "Favorites", path: "/favorites", description: "Your saved heritage sites" },
   { icon: Calendar, label: "Events", path: "/events", description: "Cultural events and festivals" },
