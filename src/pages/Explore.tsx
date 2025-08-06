@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MapPin, Star, Clock, Users, Heart, Navigation } from "lucide-react";
+import { MapPin, Star, Clock, Users, Heart, Navigation, MapPinIcon } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -126,6 +126,9 @@ export default function Explore() {
   const [recommendations, setRecommendations] = useState<HeritageSite[]>([]);
   const [activeTab, setActiveTab] = useState("map");
   const [selectedSite, setSelectedSite] = useState<HeritageSite | null>(null);
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [locationPermissionGranted, setLocationPermissionGranted] = useState(false);
+  const [locationLoading, setLocationLoading] = useState(false);
 
   useEffect(() => {
     // Check for trip data and personas
@@ -157,21 +160,78 @@ export default function Explore() {
     }
   }, [navigate]);
 
+  const requestLocationPermission = async () => {
+    setLocationLoading(true);
+    
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 60000
+        });
+      });
+      
+      const coords: [number, number] = [position.coords.longitude, position.coords.latitude];
+      setUserLocation(coords);
+      setLocationPermissionGranted(true);
+      toast.success("Location accessed successfully!");
+    } catch (error) {
+      console.error('Geolocation error:', error);
+      toast.error("Location access denied or unavailable");
+    } finally {
+      setLocationLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!mapContainer.current || !recommendations.length) return;
 
     // Initialize map
     mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN_HERE'; // You'll need to add your Mapbox token
     
+    // Use user location if available, otherwise default to first recommendation
+    const mapCenter = userLocation || recommendations[0]?.coordinates || [23.7275, 37.9755];
+    
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',
-      center: recommendations[0]?.coordinates || [23.7275, 37.9755],
-      zoom: 12
+      center: mapCenter,
+      zoom: userLocation ? 14 : 12
     });
 
     // Add navigation controls
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+    // Add user location marker if available
+    if (userLocation) {
+      const userMarker = document.createElement('div');
+      userMarker.className = 'user-location-marker';
+      userMarker.style.width = '20px';
+      userMarker.style.height = '20px';
+      userMarker.style.borderRadius = '50%';
+      userMarker.style.backgroundColor = '#ef4444';
+      userMarker.style.border = '3px solid white';
+      userMarker.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+      userMarker.style.position = 'relative';
+      
+      // Add pulsing animation
+      const pulse = document.createElement('div');
+      pulse.style.position = 'absolute';
+      pulse.style.top = '-10px';
+      pulse.style.left = '-10px';
+      pulse.style.width = '40px';
+      pulse.style.height = '40px';
+      pulse.style.borderRadius = '50%';
+      pulse.style.backgroundColor = '#ef4444';
+      pulse.style.opacity = '0.3';
+      pulse.style.animation = 'pulse 2s infinite';
+      userMarker.appendChild(pulse);
+
+      new mapboxgl.Marker(userMarker)
+        .setLngLat(userLocation)
+        .addTo(map.current!);
+    }
 
     // Add markers for each site
     recommendations.forEach((site) => {
@@ -206,7 +266,7 @@ export default function Explore() {
     return () => {
       map.current?.remove();
     };
-  }, [recommendations]);
+  }, [recommendations, userLocation]);
 
   const handleAddToFavorites = (siteId: string) => {
     toast.success("Added to favorites!");
@@ -263,6 +323,20 @@ export default function Explore() {
             <div className="relative h-full">
               <div ref={mapContainer} className="absolute inset-0" />
               
+              {/* Location Permission Button */}
+              {!locationPermissionGranted && (
+                <div className="absolute top-4 right-4 z-10">
+                  <Button
+                    onClick={requestLocationPermission}
+                    disabled={locationLoading}
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg"
+                  >
+                    <MapPinIcon className="h-4 w-4 mr-2" />
+                    {locationLoading ? "Getting Location..." : "Use My Location"}
+                  </Button>
+                </div>
+              )}
+              
               {/* Map Legend */}
               <div className="absolute top-4 left-4 bg-card/95 backdrop-blur-sm rounded-lg p-3 shadow-lg">
                 <div className="space-y-2 text-sm">
@@ -274,6 +348,12 @@ export default function Explore() {
                     <div className="w-4 h-4 rounded-full bg-muted border-2 border-white opacity-60"></div>
                     <span>Other heritage sites</span>
                   </div>
+                  {userLocation && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded-full bg-red-500 border-2 border-white"></div>
+                      <span>Your location</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
