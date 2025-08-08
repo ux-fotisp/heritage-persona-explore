@@ -13,6 +13,10 @@ import { CalendarIcon, MapPin, Sparkles, Users, AlertCircle } from "lucide-react
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { SiteCard } from "@/components/heritage/SiteCard";
+import templeImg from "@/assets/heritage-temple.jpg";
+import castleImg from "@/assets/heritage-castle.jpg";
+import museumImg from "@/assets/heritage-museum.jpg";
 
 interface PersonaData {
   id: string;
@@ -93,7 +97,44 @@ export default function Planner() {
     navigate("/explore");
   };
 
-  const availableCities = selectedCountry ? citiesByCountry[selectedCountry] || [] : [];
+const availableCities = selectedCountry ? citiesByCountry[selectedCountry] || [] : [];
+
+// Resolve demo image paths from data to imported assets
+const resolveImage = (image: string) => {
+  if (image.includes("temple")) return templeImg;
+  if (image.includes("castle")) return castleImg;
+  if (image.includes("museum")) return museumImg;
+  return templeImg;
+};
+
+const personaIds = userPersonas.map((p) => p.id);
+
+const sitesForPlanner = HERITAGE_SITES
+  .filter((s) => {
+    if (selectedCountry && s.country !== selectedCountry) return false;
+    if (selectedCity && s.city !== selectedCity) return false;
+    return true;
+  })
+  .map((s) => {
+    const overlap = s.personas.filter((pid) => personaIds.includes(pid)).length;
+    const isPersonaMatch = overlap > 0;
+    const base = isPersonaMatch ? 70 : 50;
+    const cityBoost = selectedCity && s.city === selectedCity ? 20 : selectedCountry && s.country === selectedCountry ? 10 : 0;
+    const matchScore = Math.min(99, base + overlap * 8 + (cityBoost || 0));
+    return {
+      ...s,
+      image: resolveImage(s.image),
+      matchScore,
+    } as typeof s & { matchScore: number; image: string };
+  })
+  .sort((a, b) => b.matchScore - a.matchScore);
+
+const handleAddSite = (siteId: string) => {
+  const existing: string[] = JSON.parse(localStorage.getItem("plannedSites") || "[]");
+  const merged = Array.from(new Set([...existing, siteId]));
+  localStorage.setItem("plannedSites", JSON.stringify(merged));
+  toast.success("Added to your plan");
+};
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -305,6 +346,39 @@ export default function Planner() {
             : "Create My Cultural Trip"
           }
         </Button>
+
+        {/* Browse Sites Section */}
+        <section aria-labelledby="browse-heading" className="mt-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 id="browse-heading" className="text-lg font-semibold">Browse Cultural Heritage Sites</h2>
+            <span className="text-sm text-muted-foreground">{sitesForPlanner.length} sites</span>
+          </div>
+
+          {!selectedCountry && (
+            <p className="text-sm text-muted-foreground mb-3">
+              Tip: Select a country and city to narrow the results and improve matching.
+            </p>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {sitesForPlanner.map((site) => (
+              <SiteCard
+                key={site.id}
+                id={site.id}
+                name={site.name}
+                description={site.description}
+                image={site.image}
+                location={`${site.city}, ${site.country}`}
+                duration={site.duration}
+                category={site.category}
+                accessibility="High"
+                rating={site.rating}
+                matchScore={(site as any).matchScore ?? 50}
+                onAddToTrip={() => handleAddSite(site.id)}
+              />
+            ))}
+          </div>
+        </section>
       </div>
 
       <BottomNav />
