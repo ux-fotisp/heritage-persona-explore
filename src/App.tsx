@@ -20,6 +20,7 @@ import Search from "./pages/Search";
 import Profile from "./pages/Profile";
 import Suggest from "./pages/Suggest";
 import NotFound from "./pages/NotFound";
+import RateExperience from "./pages/RateExperience";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/suggest" element={<Suggest />} />
             <Route path="/planner" element={<Planner />} />
             <Route path="/explore" element={<Explore />} />
+            <Route path="/rate/:siteId" element={<RateExperience />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/about" element={<About />} />

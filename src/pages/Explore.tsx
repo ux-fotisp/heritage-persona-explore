@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MapPin, Star, Clock, Users, Heart, Navigation, MapPinIcon } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -42,80 +41,43 @@ interface HeritageSite {
   matchScore: number;
   isPersonaMatch: boolean;
   personas: string[];
+  country: string;
+  city: string;
 }
 
-const generateRecommendations = (tripData: TripData): HeritageSite[] => {
-  const userPersonaIds = tripData.personas.map(p => p.id);
-  
-  const sites: HeritageSite[] = [
-    {
-      id: "1",
-      name: "Acropolis of Athens",
-      description: "Ancient citadel located on a rocky outcrop above the city of Athens",
-      category: "Archaeological Site",
-      rating: 4.8,
-      duration: "2-3 hours",
-      coordinates: [23.7275, 37.9755],
-      image: "/placeholder.svg",
-      matchScore: userPersonaIds.includes("cultural-explorer") ? 95 : 70,
-      isPersonaMatch: userPersonaIds.includes("cultural-explorer"),
-      personas: ["cultural-explorer", "history-buff"]
-    },
-    {
-      id: "2", 
-      name: "Benaki Museum",
-      description: "One of the finest museums in Greece with extensive collections",
-      category: "Museum",
-      rating: 4.6,
-      duration: "1-2 hours",
-      coordinates: [23.7348, 37.9777],
-      image: "/placeholder.svg",
-      matchScore: userPersonaIds.includes("art-enthusiast") ? 92 : 65,
-      isPersonaMatch: userPersonaIds.includes("art-enthusiast"),
-      personas: ["art-enthusiast", "cultural-explorer"]
-    },
-    {
-      id: "3",
-      name: "Ancient Agora",
-      description: "Heart of ancient Athens and birthplace of democracy",
-      category: "Archaeological Site", 
-      rating: 4.7,
-      duration: "2-3 hours",
-      coordinates: [23.7215, 37.9753],
-      image: "/placeholder.svg",
-      matchScore: userPersonaIds.includes("history-buff") ? 90 : 68,
-      isPersonaMatch: userPersonaIds.includes("history-buff"),
-      personas: ["history-buff", "cultural-explorer"]
-    },
-    {
-      id: "4",
-      name: "National Gardens",
-      description: "Beautiful public park in the heart of Athens",
-      category: "Park",
-      rating: 4.3,
-      duration: "1 hour",
-      coordinates: [23.7368, 37.9720],
-      image: "/placeholder.svg",
-      matchScore: userPersonaIds.includes("nature-lover") ? 85 : 50,
-      isPersonaMatch: userPersonaIds.includes("nature-lover"),
-      personas: ["nature-lover", "leisurely-wanderer"]
-    },
-    {
-      id: "5",
-      name: "Monastiraki Flea Market",
-      description: "Vibrant marketplace with antiques and local crafts",
-      category: "Market",
-      rating: 4.2,
-      duration: "1-2 hours", 
-      coordinates: [23.7255, 37.9760],
-      image: "/placeholder.svg",
-      matchScore: userPersonaIds.includes("cultural-immersion") ? 88 : 55,
-      isPersonaMatch: userPersonaIds.includes("cultural-immersion"),
-      personas: ["cultural-immersion", "adventure-seeker"]
-    }
-  ];
+import { HERITAGE_SITES } from "@/data/heritageSites";
 
-  return sites.sort((a, b) => b.matchScore - a.matchScore);
+const generateRecommendations = (tripData: TripData): HeritageSite[] => {
+  const userPersonaIds = tripData.personas.map((p) => p.id);
+
+  const filtered = HERITAGE_SITES.filter((s) =>
+    s.country === tripData.country && (!tripData.city || s.city === tripData.city)
+  );
+
+  const scored: HeritageSite[] = filtered.map((s) => {
+    const overlap = s.personas.filter((pid) => userPersonaIds.includes(pid)).length;
+    const isPersonaMatch = overlap > 0;
+    const base = isPersonaMatch ? 70 : 50;
+    const cityBoost = s.city === tripData.city ? 20 : 0;
+    const matchScore = Math.min(99, base + overlap * 8 + cityBoost);
+    return {
+      id: s.id,
+      name: s.name,
+      description: s.description,
+      category: s.category,
+      rating: s.rating,
+      duration: s.duration,
+      coordinates: s.coordinates,
+      image: s.image,
+      matchScore,
+      isPersonaMatch,
+      personas: s.personas,
+      country: s.country,
+      city: s.city,
+    } as HeritageSite;
+  });
+
+  return scored.sort((a, b) => b.matchScore - a.matchScore);
 };
 
 export default function Explore() {
@@ -187,12 +149,10 @@ export default function Explore() {
   useEffect(() => {
     if (!mapContainer.current || !recommendations.length) return;
 
-    // Initialize map
-    mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN_HERE'; // You'll need to add your Mapbox token
-    
-    // Use user location if available, otherwise default to first recommendation
+    mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN_HERE'; // TODO: Provide your Mapbox public token
+
     const mapCenter = userLocation || recommendations[0]?.coordinates || [23.7275, 37.9755];
-    
+
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',
@@ -274,7 +234,42 @@ export default function Explore() {
 
   const handleGetDirections = (site: HeritageSite) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${site.coordinates[1]},${site.coordinates[0]}`;
-    window.open(url, '_blank');
+    window.open(url, "_blank");
+  };
+
+  const scheduleUEQSReminders = (site: HeritageSite) => {
+    const trip = tripData;
+    if (!trip) return;
+    const whenStr = (d: Date) => d.toLocaleString();
+
+    const start = new Date(trip.dateFrom);
+    const after = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+    const after24 = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+
+    const reminders = JSON.parse(localStorage.getItem("ueqsReminders") || "[]");
+    const toAdd = [
+      {
+        id: `${site.id}-before`,
+        title: `Before visiting ${site.name}`,
+        message: "Share your expectations (UEQ-S)",
+        when: whenStr(start),
+      },
+      {
+        id: `${site.id}-after`,
+        title: `Right after ${site.name}`,
+        message: "Rate your experience (UEQ-S)",
+        when: whenStr(after),
+      },
+      {
+        id: `${site.id}-24h`,
+        title: `24h after ${site.name}`,
+        message: "Reflect on your visit (UEQ-S)",
+        when: whenStr(after24),
+      },
+    ];
+    const merged = [...reminders.filter((r: any) => !r.id.startsWith(site.id)), ...toAdd];
+    localStorage.setItem("ueqsReminders", JSON.stringify(merged));
+    toast.success("UEQ-S reminders scheduled (in-app)");
   };
 
   if (!tripData) {
@@ -413,18 +408,39 @@ export default function Explore() {
                         <span>{site.duration}</span>
                       </div>
                     </div>
-                    
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleGetDirections(site);
-                      }}
-                    >
-                      <Navigation className="h-4 w-4 mr-1" />
-                      Directions
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleGetDirections(site);
+                        }}
+                      >
+                        <Navigation className="h-4 w-4 mr-1" />
+                        Directions
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          scheduleUEQSReminders(site);
+                        }}
+                      >
+                        Schedule UEQ-S
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/rate/${site.id}?timeframe=before`);
+                        }}
+                      >
+                        Rate experience
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

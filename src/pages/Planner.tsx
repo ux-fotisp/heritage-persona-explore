@@ -23,31 +23,14 @@ interface PersonaData {
   value: number;
 }
 
-const countries = [
-  "Greece",
-  "Italy", 
-  "Spain",
-  "France",
-  "Germany",
-  "United Kingdom",
-  "Portugal",
-  "Netherlands",
-  "Czech Republic",
-  "Turkey"
-];
+import { HERITAGE_SITES } from "@/data/heritageSites";
 
-const citiesByCountry: { [key: string]: string[] } = {
-  "Greece": ["Athens", "Thessaloniki", "Patras", "Heraklion", "Rhodes", "Santorini"],
-  "Italy": ["Rome", "Florence", "Venice", "Milan", "Naples", "Bologna"],
-  "Spain": ["Madrid", "Barcelona", "Seville", "Granada", "Valencia", "Bilbao"],
-  "France": ["Paris", "Lyon", "Marseille", "Nice", "Strasbourg", "Bordeaux"],
-  "Germany": ["Berlin", "Munich", "Hamburg", "Cologne", "Frankfurt", "Dresden"],
-  "United Kingdom": ["London", "Edinburgh", "Manchester", "Liverpool", "Oxford", "Bath"],
-  "Portugal": ["Lisbon", "Porto", "Braga", "Coimbra", "Faro", "Sintra"],
-  "Netherlands": ["Amsterdam", "Utrecht", "Rotterdam", "The Hague", "Maastricht", "Delft"],
-  "Czech Republic": ["Prague", "Brno", "Ostrava", "Plzen", "Ceske Budejovice", "Olomouc"],
-  "Turkey": ["Istanbul", "Ankara", "Izmir", "Antalya", "Bursa", "Cappadocia"]
-};
+const countries = Array.from(new Set(HERITAGE_SITES.map((s) => s.country)));
+
+const citiesByCountry: { [key: string]: string[] } = countries.reduce((acc, country) => {
+  acc[country] = Array.from(new Set(HERITAGE_SITES.filter((s) => s.country === country).map((s) => s.city))).sort();
+  return acc;
+}, {} as { [key: string]: string[] });
 
 export default function Planner() {
   const navigate = useNavigate();

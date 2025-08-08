@@ -283,7 +283,7 @@ export default function PersonaQuestionnaire() {
       </div>
 
       {/* Bottom CTA - Fixed */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border p-4">
+      <div className={`${allCompleted ? 'fixed bottom-8' : 'fixed bottom-0'} left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border p-4`}>
         <Button
           onClick={handleComplete}
           disabled={!allCompleted}

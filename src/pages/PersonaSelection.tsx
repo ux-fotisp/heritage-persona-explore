@@ -207,7 +207,7 @@ export default function PersonaSelection() {
       )}
 
       {/* Bottom CTA - Fixed */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border p-4">
+      <div className={`${selectedPersonas.length > 0 ? 'fixed bottom-8' : 'fixed bottom-0'} left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border p-4`}>
         <Button
           onClick={handleContinue}
           disabled={selectedPersonas.length === 0}

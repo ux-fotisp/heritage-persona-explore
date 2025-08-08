@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Drawer,
   DrawerContent,
@@ -23,9 +24,19 @@ interface NotificationDrawerProps {
   onClose: () => void;
 }
 
-const notifications = [
+type NotificationItem = {
+  id: string;
+  type: string;
+  icon: any;
+  title: string;
+  message: string;
+  time: string;
+  unread: boolean;
+};
+
+const staticNotifications: NotificationItem[] = [
   {
-    id: 1,
+    id: "n1",
     type: "new_site",
     icon: MapPin,
     title: "New Heritage Site Added",
@@ -34,7 +45,7 @@ const notifications = [
     unread: true,
   },
   {
-    id: 2,
+    id: "n2",
     type: "event",
     icon: Calendar,
     title: "Cultural Festival Reminder",
@@ -42,44 +53,33 @@ const notifications = [
     time: "5 hours ago",
     unread: true,
   },
-  {
-    id: 3,
-    type: "social",
-    icon: Users,
-    title: "New Group Member",
-    message: "Sarah joined your Cultural Heritage Explorers group",
-    time: "1 day ago",
-    unread: true,
-  },
-  {
-    id: 4,
-    type: "favorite",
-    icon: Heart,
-    title: "Favorite Site Update",
-    message: "Ancient Temple Complex has new visitor hours",
-    time: "2 days ago",
-    unread: false,
-  },
-  {
-    id: 5,
-    type: "system",
-    icon: Bell,
-    title: "Profile Completed",
-    message: "Your travel persona has been successfully created",
-    time: "3 days ago",
-    unread: false,
-  },
 ];
 
 export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps) {
-  const unreadCount = notifications.filter(n => n.unread).length;
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+
+  useEffect(() => {
+    const reminders = JSON.parse(localStorage.getItem("ueqsReminders") || "[]");
+    const mapped: NotificationItem[] = reminders.map((r: any) => ({
+      id: r.id,
+      type: "ueqs",
+      icon: Bell,
+      title: r.title,
+      message: r.message,
+      time: r.when,
+      unread: true,
+    }));
+    setNotifications([...mapped, ...staticNotifications]);
+  }, [isOpen]);
+
+  const unreadCount = notifications.filter((n) => n.unread).length;
 
   const handleMarkAllRead = () => {
     // TODO: Implement mark all as read functionality
     console.log("Mark all notifications as read");
   };
 
-  const handleDeleteNotification = (id: number) => {
+  const handleDeleteNotification = (id: string) => {
     // TODO: Implement delete notification functionality
     console.log("Delete notification:", id);
   };
