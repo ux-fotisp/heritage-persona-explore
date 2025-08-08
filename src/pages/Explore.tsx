@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MapPin, Star, Clock, Heart, Navigation } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -326,7 +327,7 @@ export default function Explore() {
                     disabled={locationLoading}
                     className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg"
                   >
-                    <MapPinIcon className="h-4 w-4 mr-2" />
+                    <MapPin className="h-4 w-4 mr-2" />
                     {locationLoading ? "Getting Location..." : "Use My Location"}
                   </Button>
                 </div>
