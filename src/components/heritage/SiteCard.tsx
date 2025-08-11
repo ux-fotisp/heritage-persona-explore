@@ -15,7 +15,9 @@ interface SiteCardProps {
   accessibility: "High" | "Medium" | "Low";
   rating: number;
   matchScore: number;
+  matchedPersonas?: string[];
   onAddToTrip: () => void;
+  onRate?: () => void;
   className?: string;
 }
 
@@ -30,7 +32,9 @@ export function SiteCard({
   accessibility,
   rating,
   matchScore,
+  matchedPersonas,
   onAddToTrip,
+  onRate,
   className
 }: SiteCardProps) {
   const getAccessibilityColor = (level: string) => {
@@ -93,17 +97,34 @@ export function SiteCard({
             <span className="text-sm font-medium">{rating}</span>
           </div>
         </div>
+        {matchedPersonas && matchedPersonas.length > 0 && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Users className="h-3 w-3" />
+            <span>Matched personas: {matchedPersonas.join(", ")}</span>
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="p-4 pt-0">
-        <Button 
-          variant="outline" 
-          className="w-full"
-          onClick={onAddToTrip}
-        >
-          <Plus className="h-4 w-4" />
-          Add to Trip
-        </Button>
+        <div className="grid grid-cols-2 gap-2 w-full">
+          <Button 
+            variant="secondary"
+            className="w-full"
+            onClick={onRate}
+            disabled={!onRate}
+          >
+            <Star className="h-4 w-4 mr-2" />
+            Rate
+          </Button>
+          <Button 
+            variant="outline" 
+            className="w-full"
+            onClick={onAddToTrip}
+          >
+            <Plus className="h-4 w-4" />
+            Add to Trip
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );

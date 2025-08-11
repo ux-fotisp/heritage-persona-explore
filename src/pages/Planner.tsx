@@ -374,7 +374,9 @@ const handleAddSite = (siteId: string) => {
                 accessibility="High"
                 rating={site.rating}
                 matchScore={(site as any).matchScore ?? 50}
+                matchedPersonas={userPersonas.filter((p) => site.personas.includes(p.id)).map((p) => p.title)}
                 onAddToTrip={() => handleAddSite(site.id)}
+                onRate={() => navigate(`/rate/${site.id}?timeframe=before`)}
               />
             ))}
           </div>
