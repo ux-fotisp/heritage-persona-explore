@@ -23,7 +23,9 @@ interface PersonaData {
   id: string;
   title: string;
   description: string;
-  traits: string[];
+  traits?: string[]; // optional, some flows use likes/dislikes instead
+  likes?: string[]; // optional
+  dislikes?: string[]; // optional
   icon: string;
   value: number;
 }
@@ -121,13 +123,13 @@ export default function PersonaResults() {
                     </div>
 
                     <div className="flex flex-wrap gap-2">
-                      {persona.traits.map((trait) => (
+                      {((persona.traits && persona.traits.length ? persona.traits : (persona.likes ?? []))).map((tag) => (
                         <Badge 
-                          key={trait} 
+                          key={tag} 
                           variant="secondary" 
                           className="text-xs"
                         >
-                          {trait}
+                          {tag}
                         </Badge>
                       ))}
                     </div>

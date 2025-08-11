@@ -2,7 +2,9 @@ export interface PersonaData {
   id: string;
   title: string;
   description: string;
-  traits: string[];
+  traits?: string[];
+  likes?: string[];
+  dislikes?: string[];
   icon: string; // emoji or icon name
   value: number; // 0-10
 }
