@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -5,6 +6,18 @@ import { Badge } from "@/components/ui/badge";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { Progress } from "@/components/ui/progress";
 import { Sparkles, Share, Heart } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { loadPersonaAssessment, savePersonaAssessment } from "@/lib/personaStorage";
 
 interface PersonaData {
   id: string;
@@ -18,16 +31,37 @@ interface PersonaData {
 export default function PersonaResults() {
   const location = useLocation();
   const navigate = useNavigate();
-  
-  const { topPersonas, allPersonas } = location.state as {
+
+  const stateData = (location.state as {
     topPersonas: PersonaData[];
     allPersonas: PersonaData[];
-  };
+  }) || undefined;
 
-  if (!topPersonas || !allPersonas) {
-    navigate("/onboarding");
-    return null;
-  }
+  const [data, setData] = useState<{
+    topPersonas: PersonaData[];
+    allPersonas: PersonaData[];
+  } | null>(stateData ? { topPersonas: stateData.topPersonas, allPersonas: stateData.allPersonas } : null);
+
+  useEffect(() => {
+    if (stateData?.topPersonas && stateData?.allPersonas) {
+      savePersonaAssessment({
+        topPersonas: stateData.topPersonas,
+        allPersonas: stateData.allPersonas,
+        completedAt: new Date().toISOString(),
+      });
+      return;
+    }
+    const stored = loadPersonaAssessment();
+    if (stored) {
+      setData({ topPersonas: stored.topPersonas, allPersonas: stored.allPersonas });
+    } else {
+      navigate("/onboarding", { replace: true });
+    }
+  }, []);
+
+  if (!data) return null;
+
+  const { topPersonas, allPersonas } = data;
 
   const handleStartExploring = () => {
     navigate("/discover");
@@ -147,6 +181,28 @@ export default function PersonaResults() {
             <Share className="h-4 w-4 mr-2" />
             Share My Travel Persona
           </Button>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="secondary" className="w-full py-3 rounded-full h-auto">
+                Retake Assessment
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Retake the persona assessment?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Your current persona matches and recommendations will be updated based on your new answers.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => navigate("/persona-questionnaire")}>
+                  Retake now
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </div>

@@ -1,10 +1,28 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, MapPin, Calendar, BarChart3, Sparkles, Globe } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { loadPersonaAssessment } from "@/lib/personaStorage";
 
 const Index = () => {
   const navigate = useNavigate();
+  const [hasPersona, setHasPersona] = useState(false);
+
+  useEffect(() => {
+    setHasPersona(!!loadPersonaAssessment());
+  }, []);
 
   const features = [
     {
@@ -53,6 +71,35 @@ const Index = () => {
                 Plan visits, evaluate experiences, and grow your cultural understanding.
               </p>
             </div>
+            {hasPersona && (
+              <Card className="max-w-md mx-auto">
+                <CardContent className="p-4 flex items-center justify-between gap-3">
+                  <div className="text-left">
+                    <p className="text-sm font-medium text-foreground">You have a saved persona</p>
+                    <p className="text-xs text-muted-foreground">Retaking the assessment will update your results.</p>
+                  </div>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button size="sm" variant="secondary">Retake</Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Retake the persona assessment?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Your current persona matches and recommendations will be updated based on your new answers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => navigate("/persona-questionnaire")}>
+                          Retake now
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </CardContent>
+              </Card>
+            )}
 
             <div className="flex flex-col gap-4 justify-center max-w-xs mx-auto">
               <Button 

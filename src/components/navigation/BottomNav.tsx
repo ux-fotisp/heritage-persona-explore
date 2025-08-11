@@ -6,7 +6,7 @@ const navItems = [
   { href: "/", icon: Home, label: "Home" },
   { href: "/discover", icon: Map, label: "Explore" },
   { href: "/planner", icon: Calendar, label: "Planner" },
-  { href: "/profile", icon: User, label: "My Persona" },
+  { href: "/persona-results", icon: User, label: "My Persona" },
 ];
 
 export function BottomNav() {
