@@ -1,11 +1,35 @@
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AppHeader } from "@/components/navigation/AppHeader";
+import { DestinationForm } from "@/components/profile/DestinationForm";
+import { DestinationList } from "@/components/profile/DestinationList";
+import { getUserDestinations, type UserDestination } from "@/lib/destinationStorage";
 import { Settings, MapPin, Calendar, Heart, Share } from "lucide-react";
 
 export default function Profile() {
+  const [userDestinations, setUserDestinations] = useState<UserDestination[]>([]);
+
+  useEffect(() => {
+    setUserDestinations(getUserDestinations());
+  }, []);
+
+  const handleDestinationAdded = (destination: UserDestination) => {
+    setUserDestinations(prev => [...prev, destination]);
+  };
+
+  const handleDestinationUpdated = (updatedDestination: UserDestination) => {
+    setUserDestinations(prev => 
+      prev.map(dest => dest.id === updatedDestination.id ? updatedDestination : dest)
+    );
+  };
+
+  const handleDestinationRemoved = (id: string) => {
+    setUserDestinations(prev => prev.filter(dest => dest.id !== id));
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <AppHeader showBackButton={false} title="Profile" />
@@ -75,6 +99,16 @@ export default function Profile() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Cultural Destinations */}
+      <div className="space-y-6 mb-6">
+        <DestinationForm onDestinationAdded={handleDestinationAdded} />
+        <DestinationList 
+          destinations={userDestinations}
+          onDestinationUpdated={handleDestinationUpdated}
+          onDestinationRemoved={handleDestinationRemoved}
+        />
+      </div>
 
       {/* Travel Persona */}
       <Card>
