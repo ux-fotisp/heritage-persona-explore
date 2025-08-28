@@ -6,14 +6,19 @@ import { Badge } from "@/components/ui/badge";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { DestinationForm } from "@/components/profile/DestinationForm";
 import { DestinationList } from "@/components/profile/DestinationList";
+import { ScheduleVisit } from "@/components/profile/ScheduleVisit";
+import { ScheduledVisitsList } from "@/components/profile/ScheduledVisitsList";
 import { getUserDestinations, type UserDestination } from "@/lib/destinationStorage";
+import { getScheduledVisits, type ScheduledVisit } from "@/lib/visitStorage";
 import { Settings, MapPin, Calendar, Heart, Share } from "lucide-react";
 
 export default function Profile() {
   const [userDestinations, setUserDestinations] = useState<UserDestination[]>([]);
+  const [scheduledVisits, setScheduledVisits] = useState<ScheduledVisit[]>([]);
 
   useEffect(() => {
     setUserDestinations(getUserDestinations());
+    setScheduledVisits(getScheduledVisits());
   }, []);
 
   const handleDestinationAdded = (destination: UserDestination) => {
@@ -28,6 +33,20 @@ export default function Profile() {
 
   const handleDestinationRemoved = (id: string) => {
     setUserDestinations(prev => prev.filter(dest => dest.id !== id));
+  };
+
+  const handleVisitScheduled = (visit: ScheduledVisit) => {
+    setScheduledVisits(prev => [...prev, visit]);
+  };
+
+  const handleVisitUpdated = (visitId: string, status: ScheduledVisit['status']) => {
+    setScheduledVisits(prev => 
+      prev.map(visit => visit.id === visitId ? { ...visit, status } : visit)
+    );
+  };
+
+  const handleVisitRemoved = (visitId: string) => {
+    setScheduledVisits(prev => prev.filter(visit => visit.id !== visitId));
   };
 
   return (
@@ -107,6 +126,19 @@ export default function Profile() {
           destinations={userDestinations}
           onDestinationUpdated={handleDestinationUpdated}
           onDestinationRemoved={handleDestinationRemoved}
+        />
+      </div>
+
+      {/* Schedule Visits */}
+      <div className="space-y-6 mb-6">
+        <ScheduleVisit 
+          destinations={userDestinations}
+          onVisitScheduled={handleVisitScheduled}
+        />
+        <ScheduledVisitsList 
+          visits={scheduledVisits}
+          onVisitUpdated={handleVisitUpdated}
+          onVisitRemoved={handleVisitRemoved}
         />
       </div>
 
