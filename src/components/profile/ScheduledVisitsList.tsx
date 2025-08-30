@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Trash2, CheckCircle, XCircle } from 'lucide-react';
+import { Calendar, MapPin, Trash2, CheckCircle, XCircle, FileText } from 'lucide-react';
 import { type ScheduledVisit, updateVisitStatus, removeScheduledVisit } from '@/lib/visitStorage';
 import { useToast } from '@/hooks/use-toast';
+import { hasCompletedPhase } from '@/lib/evaluationStorage';
 
 interface ScheduledVisitsListProps {
   visits: ScheduledVisit[];
@@ -14,6 +16,7 @@ interface ScheduledVisitsListProps {
 }
 
 export function ScheduledVisitsList({ visits, onVisitUpdated, onVisitRemoved }: ScheduledVisitsListProps) {
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleStatusUpdate = (visitId: string, status: ScheduledVisit['status']) => {
@@ -50,6 +53,30 @@ export function ScheduledVisitsList({ visits, onVisitUpdated, onVisitRemoved }: 
       case 'completed': return <CheckCircle className="h-4 w-4" />;
       case 'cancelled': return <XCircle className="h-4 w-4" />;
       default: return <Calendar className="h-4 w-4" />;
+    }
+  };
+
+  const getEvaluationPhase = (visit: ScheduledVisit): 'pre-visit' | 'post-visit' | '24h-after' | null => {
+    const visitDate = new Date(visit.visitDate);
+    const now = new Date();
+    const timeDiff = now.getTime() - visitDate.getTime();
+    const hoursDiff = timeDiff / (1000 * 3600);
+
+    if (hoursDiff < 0) return 'pre-visit';
+    if (hoursDiff <= 1) return 'post-visit';
+    if (hoursDiff >= 24 && hoursDiff <= 48) return '24h-after';
+    return null;
+  };
+
+  const canEvaluate = (visit: ScheduledVisit): boolean => {
+    const phase = getEvaluationPhase(visit);
+    return phase !== null && !hasCompletedPhase(visit.id, phase);
+  };
+
+  const handleEvaluate = (visit: ScheduledVisit) => {
+    const phase = getEvaluationPhase(visit);
+    if (phase) {
+      navigate(`/evaluation/${visit.id}?phase=${phase}`);
     }
   };
 
@@ -107,26 +134,41 @@ export function ScheduledVisitsList({ visits, onVisitUpdated, onVisitRemoved }: 
               </div>
             </div>
             
-            {visit.status === 'scheduled' && (
-              <div className="flex gap-2 pt-2 border-t">
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => handleStatusUpdate(visit.id, 'completed')}
+            <div className="flex gap-2 pt-2 border-t">
+              {canEvaluate(visit) && (
+                <Button
+                  size="sm"
+                  variant="default"
+                  onClick={() => handleEvaluate(visit)}
+                  className="flex-1"
                 >
-                  <CheckCircle className="h-4 w-4 mr-1" />
-                  Mark Complete
+                  <FileText className="h-4 w-4 mr-1" />
+                  Evaluate
                 </Button>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => handleStatusUpdate(visit.id, 'cancelled')}
-                >
-                  <XCircle className="h-4 w-4 mr-1" />
-                  Cancel
-                </Button>
-              </div>
-            )}
+              )}
+              {visit.status === 'scheduled' && (
+                <>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => handleStatusUpdate(visit.id, 'completed')}
+                    className="flex-1"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    Complete
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => handleStatusUpdate(visit.id, 'cancelled')}
+                    className="flex-1"
+                  >
+                    <XCircle className="h-4 w-4 mr-1" />
+                    Cancel
+                  </Button>
+                </>
+              )}
+            </div>
             
             <div className="text-xs text-muted-foreground">
               Scheduled {format(new Date(visit.dateScheduled), 'PPp')}

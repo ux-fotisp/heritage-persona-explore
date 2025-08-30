@@ -21,6 +21,7 @@ import Profile from "./pages/Profile";
 import Suggest from "./pages/Suggest";
 import NotFound from "./pages/NotFound";
 import RateExperience from "./pages/RateExperience";
+import EvaluationFlow from "./components/evaluation/EvaluationFlow";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/planner" element={<Planner />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="/rate/:siteId" element={<RateExperience />} />
+            <Route path="/evaluation/:visitId" element={<EvaluationFlow />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/about" element={<About />} />
