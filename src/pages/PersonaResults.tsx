@@ -18,6 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { loadPersonaAssessment, savePersonaAssessment } from "@/lib/personaStorage";
+import { savePersonaAssessmentToCookie, migratePersonaToCookies } from "@/lib/cookieStorage";
 
 interface PersonaData {
   id: string;
@@ -46,13 +47,24 @@ export default function PersonaResults() {
 
   useEffect(() => {
     if (stateData?.topPersonas && stateData?.allPersonas) {
+      // Save to both localStorage (fallback) and cookies (primary)
       savePersonaAssessment({
+        topPersonas: stateData.topPersonas,
+        allPersonas: stateData.allPersonas,
+        completedAt: new Date().toISOString(),
+      });
+      
+      savePersonaAssessmentToCookie({
         topPersonas: stateData.topPersonas,
         allPersonas: stateData.allPersonas,
         completedAt: new Date().toISOString(),
       });
       return;
     }
+    
+    // Try to migrate data from localStorage to cookies first
+    migratePersonaToCookies();
+    
     const stored = loadPersonaAssessment();
     if (stored) {
       setData({ topPersonas: stored.topPersonas, allPersonas: stored.allPersonas });

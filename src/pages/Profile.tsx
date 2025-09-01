@@ -10,6 +10,7 @@ import { ScheduleVisit } from "@/components/profile/ScheduleVisit";
 import { ScheduledVisitsList } from "@/components/profile/ScheduledVisitsList";
 import { getUserDestinations, type UserDestination } from "@/lib/destinationStorage";
 import { getScheduledVisits, type ScheduledVisit } from "@/lib/visitStorage";
+import { MyPersonaTile } from "@/components/profile/MyPersonaTile";
 import { Settings, MapPin, Calendar, Heart, Share } from "lucide-react";
 
 export default function Profile() {
@@ -143,29 +144,7 @@ export default function Profile() {
       </div>
 
       {/* Travel Persona */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">My Travel Persona</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <div>
-              <p className="font-medium">Cultural Explorer</p>
-              <p className="text-sm text-muted-foreground">You love discovering historical sites and learning about local traditions</p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="outline">History Buff</Badge>
-              <Badge variant="outline">Architecture</Badge>
-              <Badge variant="outline">Local Cuisine</Badge>
-              <Badge variant="outline">Photography</Badge>
-            </div>
-            <Button className="w-full mt-4">
-              <Calendar className="h-4 w-4 mr-2" />
-              Plan New Trip
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <MyPersonaTile />
       </div>
     </div>
   );

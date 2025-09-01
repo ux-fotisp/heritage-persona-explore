@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { SiteCard } from '@/components/heritage/SiteCard';
 import { User, RefreshCw, CheckCircle } from 'lucide-react';
 import { getPersona, type PersonaData } from '@/lib/personaStorage';
+import { getPersonaFromCookie, migratePersonaToCookies } from '@/lib/cookieStorage';
 import { HERITAGE_SITES } from '@/data/heritageSites';
 import { useToast } from '@/hooks/use-toast';
 
@@ -14,7 +15,9 @@ export function PersonaRecommendations() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const savedPersona = getPersona();
+    // Try migration first, then load from cookie
+    migratePersonaToCookies();
+    const savedPersona = getPersonaFromCookie() || getPersona(); // fallback to localStorage
     setPersona(savedPersona);
   }, []);
 
@@ -53,7 +56,8 @@ export function PersonaRecommendations() {
   };
 
   const handleRefreshRecommendations = () => {
-    const savedPersona = getPersona();
+    migratePersonaToCookies();
+    const savedPersona = getPersonaFromCookie() || getPersona(); // fallback to localStorage
     setPersona(savedPersona);
     toast({
       title: "Recommendations Updated",
