@@ -61,9 +61,9 @@ export default function PersonaResults() {
     }
   }, []);
 
-  if (!data) return null;
+  if (!data || !data.topPersonas || !data.allPersonas) return null;
 
-  const { topPersonas, allPersonas } = data;
+  const { topPersonas = [], allPersonas = [] } = data;
 
   const handleStartExploring = () => {
     navigate("/discover");
@@ -123,7 +123,7 @@ export default function PersonaResults() {
                     </div>
 
                     <div className="flex flex-wrap gap-2">
-                      {((persona.traits && persona.traits.length ? persona.traits : (persona.likes ?? []))).map((tag) => (
+                      {(persona.traits?.length ? persona.traits : persona.likes || []).map((tag) => (
                         <Badge 
                           key={tag} 
                           variant="secondary" 
@@ -160,7 +160,7 @@ export default function PersonaResults() {
               <div>
                 <h3 className="font-semibold text-foreground">Perfect Matches Await</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  We'll now curate heritage sites that match your {topPersonas[0]?.title.toLowerCase()} and {topPersonas[1]?.title.toLowerCase()} style
+                  We'll now curate heritage sites that match your {topPersonas.length > 0 ? topPersonas[0].title.toLowerCase() : 'unique'}{topPersonas.length > 1 ? ` and ${topPersonas[1].title.toLowerCase()}` : ''} style
                 </p>
               </div>
             </div>
