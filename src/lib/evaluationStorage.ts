@@ -6,9 +6,7 @@ export interface EvaluationQuestion {
 }
 
 export interface EmotionWheelData {
-  emotion: string;
-  intensity: number; // 1-10
-  opposingEmotion: string;
+  [emotionPair: string]: number; // -5 to +5 for each emotion pair
 }
 
 export interface UEQSResponse {
@@ -30,62 +28,64 @@ export interface EvaluationEntry {
   createdAt: string;
 }
 
-// Universal questions for all cultural heritage sites
+// Universal questions for all cultural heritage sites - Micro-Diary Studies
 export const PHASE_QUESTIONS: Record<string, EvaluationQuestion[]> = {
   'pre-visit': [
     {
-      id: 'feeling',
-      type: 'feeling',
-      text: 'How do you feel about visiting this place?',
-      placeholder: 'Describe your emotions and expectations...'
-    },
-    {
       id: 'behavior',
       type: 'behavior',
-      text: 'What do you plan to do or experience here?',
-      placeholder: 'Describe how you plan to engage with this site...'
+      text: 'Can you walk us through what you did before your visit to the site? What influenced your decision? How did you arrive at this action?',
+      placeholder: 'Describe the steps, research, or influences that led to your visit...'
+    },
+    {
+      id: 'feeling',
+      type: 'feeling',
+      text: 'What was on your mind/heart before the visit?',
+      placeholder: 'Share your thoughts, emotions, and expectations...'
     }
   ],
   'post-visit': [
     {
-      id: 'feeling',
-      type: 'feeling',
-      text: 'How did this place make you feel?',
-      placeholder: 'Describe the emotions this visit evoked...'
-    },
-    {
       id: 'behavior',
       type: 'behavior',
-      text: 'How did you interact with this place?',
-      placeholder: 'Describe what you did, touched, experienced...'
+      text: 'Can you describe a memorable event during your visit that you remember clearly? What happened?',
+      placeholder: 'Share a specific moment, interaction, or experience that stood out...'
+    },
+    {
+      id: 'feeling',
+      type: 'feeling',
+      text: 'After leaving the site, what thoughts or impressions stayed with you?',
+      placeholder: 'Describe the lasting emotional impact or thoughts...'
     }
   ],
   '24h-after': [
     {
-      id: 'feeling',
-      type: 'feeling',
-      text: 'Reflecting on your visit, how do you feel now?',
-      placeholder: 'Describe how the experience affects you now...'
-    },
-    {
       id: 'behavior',
       type: 'behavior',
-      text: 'What memories or actions from your visit stand out?',
-      placeholder: 'Describe the most memorable interactions or moments...'
+      text: 'Since your last diary, have you done anything related to the experience (e.g., talked about it, given more thought)? If so, what stood out in your mind?',
+      placeholder: 'Share any conversations, reflections, or actions related to your visit...'
+    },
+    {
+      id: 'feeling',
+      type: 'feeling',
+      text: 'Thinking back over these events, what stands out most for you?',
+      placeholder: 'Reflect on the most significant aspects of your experience...'
     }
   ]
 };
 
-// Emotion wheel with opposing pairs
-export const EMOTION_WHEEL = [
-  { emotion: 'Joy', opposing: 'Sadness', color: 'hsl(var(--warning))' },
-  { emotion: 'Trust', opposing: 'Disgust', color: 'hsl(var(--success))' },
-  { emotion: 'Fear', opposing: 'Anger', color: 'hsl(var(--destructive))' },
-  { emotion: 'Surprise', opposing: 'Anticipation', color: 'hsl(var(--coral))' },
-  { emotion: 'Sadness', opposing: 'Joy', color: 'hsl(var(--muted))' },
-  { emotion: 'Disgust', opposing: 'Trust', color: 'hsl(var(--accent))' },
-  { emotion: 'Anger', opposing: 'Fear', color: 'hsl(var(--destructive))' },
-  { emotion: 'Anticipation', opposing: 'Surprise', color: 'hsl(var(--primary))' }
+// Geneva Emotion Wheel - Bipolar scales from -5 to +5
+export const GENEVA_EMOTION_WHEEL = [
+  { negative: 'Hate', positive: 'Love', color: 'hsl(var(--coral))' },
+  { negative: 'Anger', positive: 'Admiration', color: 'hsl(var(--destructive))' },
+  { negative: 'Fear', positive: 'Belief', color: 'hsl(var(--terracotta))' },
+  { negative: 'Disgust', positive: 'Pleasure', color: 'hsl(var(--olive))' },
+  { negative: 'Shame', positive: 'Pride', color: 'hsl(var(--warning))' },
+  { negative: 'Guilt', positive: 'Compassion', color: 'hsl(var(--sage))' },
+  { negative: 'Sadness', positive: 'Joy', color: 'hsl(var(--success))' },
+  { negative: 'Regret', positive: 'Contentment', color: 'hsl(var(--parchment))' },
+  { negative: 'Contempt', positive: 'Respect', color: 'hsl(var(--primary))' },
+  { negative: 'Anxiety', positive: 'Interest', color: 'hsl(var(--accent))' }
 ];
 
 const EVALUATIONS_STORAGE_KEY = 'evaluationEntries';

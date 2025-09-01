@@ -8,8 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { FileText } from "lucide-react";
 import { PhaseQuestions } from "./PhaseQuestions";
-import { EmotionWheel } from "./EmotionWheel";
+import { GenevaEmotionWheel } from "./GenevaEmotionWheel";
 import { UEQSForm } from "./UEQSForm";
 import { 
   EvaluationEntry, 
@@ -44,9 +45,11 @@ export default function EvaluationFlow() {
   const [comments, setComments] = useState('');
 
   const requiresUEQS = phase === 'post-visit' || phase === '24h-after';
+  const requiresEmotionWheel = phase === 'post-visit' || phase === '24h-after';
   const allQuestionsAnswered = questionResponses.feeling.trim() && questionResponses.behavior.trim();
   const ueqsComplete = !requiresUEQS || Object.keys(ueqsResponses).length === 8;
-  const canSubmit = allQuestionsAnswered && emotionWheel && ueqsComplete;
+  const emotionWheelComplete = !requiresEmotionWheel || (emotionWheel && Object.keys(emotionWheel).length > 0);
+  const canSubmit = allQuestionsAnswered && emotionWheelComplete && ueqsComplete;
 
   const handleSubmit = async () => {
     if (!visit || !site || !canSubmit) {
@@ -100,25 +103,39 @@ export default function EvaluationFlow() {
 
   const getPhaseColor = () => {
     switch (phase) {
-      case 'pre-visit': return 'bg-sage text-sage-foreground';
-      case 'post-visit': return 'bg-coral text-coral-foreground';
-      case '24h-after': return 'bg-primary text-primary-foreground';
+      case 'pre-visit': return 'bg-olive text-olive-foreground';
+      case 'post-visit': return 'bg-terracotta text-terracotta-foreground';
+      case '24h-after': return 'bg-sage text-sage-foreground';
       default: return 'bg-muted text-muted-foreground';
     }
   };
 
+  const getPhaseDescription = () => {
+    switch (phase) {
+      case 'pre-visit': return 'Share your thoughts and preparations before visiting';
+      case 'post-visit': return 'Reflect on your immediate experience and feelings';
+      case '24h-after': return 'Consider the lasting impact of your cultural experience';
+      default: return 'Complete your evaluation';
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-parchment/10 via-background to-parchment/5">
       <AppHeader backPath="/profile" />
-      <div className="px-4 py-6 space-y-6">
-        {/* Header */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold">{site.name}</h1>
-            <Badge className={getPhaseColor()}>{phase}</Badge>
+      <div className="px-4 py-6 space-y-8">
+        {/* Infographic Header */}
+        <div className="text-center space-y-4 bg-parchment/20 rounded-2xl p-6 border border-parchment/30">
+          <div className="flex items-center justify-center gap-3">
+            <h1 className="text-2xl font-bold text-terracotta-foreground">{site.name}</h1>
+            <Badge className={`${getPhaseColor()} text-sm px-4 py-2`}>
+              {phase.replace('-', ' ').replace('24h', '24 Hours')}
+            </Badge>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-terracotta-foreground/80 font-medium">
             {visit.destinationCity}, {visit.destinationCountry}
+          </p>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+            {getPhaseDescription()}
           </p>
         </div>
 
@@ -129,11 +146,13 @@ export default function EvaluationFlow() {
           onChange={setQuestionResponses}
         />
 
-        {/* Emotion Wheel */}
-        <EmotionWheel
-          value={emotionWheel}
-          onChange={setEmotionWheel}
-        />
+        {/* Geneva Emotion Wheel (only for post-visit and 24h-after) */}
+        {requiresEmotionWheel && (
+          <GenevaEmotionWheel
+            value={emotionWheel}
+            onChange={setEmotionWheel}
+          />
+        )}
 
         {/* UEQ-S Form (only for post-visit and 24h-after) */}
         {requiresUEQS && (
@@ -147,20 +166,24 @@ export default function EvaluationFlow() {
         )}
 
         {/* Additional Comments */}
-        <Card>
+        <Card className="border-parchment/30 bg-parchment/5">
           <CardHeader>
-            <CardTitle className="text-lg">Additional Comments</CardTitle>
+            <CardTitle className="text-lg text-terracotta-foreground flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Additional Reflections
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Share any other thoughts or observations (Optional)
+            </p>
           </CardHeader>
           <CardContent>
-            <Label htmlFor="comments" className="text-sm">
-              Anything else you'd like to share? (Optional)
-            </Label>
             <Textarea
               id="comments"
-              placeholder="Share any additional thoughts..."
+              placeholder="Any additional insights, feelings, or observations you'd like to share..."
               value={comments}
               onChange={(e) => setComments(e.target.value)}
-              className="mt-2"
+              className="min-h-[100px] border-parchment/30 focus:border-terracotta/50"
+              rows={4}
             />
           </CardContent>
         </Card>

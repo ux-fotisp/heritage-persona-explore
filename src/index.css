@@ -22,6 +22,14 @@
     --coral: 15 70% 82%;            /* Soft coral accent */
     --coral-foreground: 15 35% 35%;
     
+    /* Cultural Heritage Colors */
+    --terracotta: 20 55% 72%;       /* Terracotta heritage tone */
+    --terracotta-foreground: 20 25% 25%;
+    --olive: 80 20% 65%;            /* Olive cultural tone */
+    --olive-foreground: 80 30% 25%;
+    --parchment: 45 30% 88%;        /* Parchment background tone */
+    --parchment-foreground: 45 20% 30%;
+    
     /* Dark Theme Base */
     --background: 273 25% 15%;      /* Dark purple background */
     --foreground: 0 0% 95%;         /* Light text */
@@ -108,6 +116,14 @@
     --sage-foreground: 95 35% 15%;
     --coral: 15 60% 75%;
     --coral-foreground: 15 45% 15%;
+    
+    /* Dark mode cultural heritage colors */
+    --terracotta: 20 45% 65%;
+    --terracotta-foreground: 20 35% 15%;
+    --olive: 80 15% 60%;
+    --olive-foreground: 80 25% 15%;
+    --parchment: 45 25% 20%;
+    --parchment-foreground: 45 30% 85%;
     
     --secondary: 273 20% 15%;
     --secondary-foreground: 273 15% 92%;

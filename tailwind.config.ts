@@ -68,6 +68,19 @@ export default {
 					DEFAULT: 'hsl(var(--coral))',
 					foreground: 'hsl(var(--coral-foreground))'
 				},
+				// Cultural Heritage Colors
+				terracotta: {
+					DEFAULT: 'hsl(var(--terracotta))',
+					foreground: 'hsl(var(--terracotta-foreground))'
+				},
+				olive: {
+					DEFAULT: 'hsl(var(--olive))',
+					foreground: 'hsl(var(--olive-foreground))'
+				},
+				parchment: {
+					DEFAULT: 'hsl(var(--parchment))',
+					foreground: 'hsl(var(--parchment-foreground))'
+				},
 				warning: {
 					DEFAULT: 'hsl(var(--warning))',
 					foreground: 'hsl(var(--warning-foreground))'

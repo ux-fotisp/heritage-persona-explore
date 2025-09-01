@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Activity } from "lucide-react";
+import { Heart, Activity, FileText } from "lucide-react";
 import { PHASE_QUESTIONS, EvaluationQuestion } from "@/lib/evaluationStorage";
 
 interface PhaseQuestionsProps {
@@ -23,52 +23,81 @@ export function PhaseQuestions({ phase, responses, onChange }: PhaseQuestionsPro
 
   const getPhaseTitle = () => {
     switch (phase) {
-      case 'pre-visit': return 'Before Your Visit';
-      case 'post-visit': return 'Right After Your Visit';
-      case '24h-after': return '24 Hours Later';
+      case 'pre-visit': return 'Pre-Visit';
+      case 'post-visit': return 'Post Visit';
+      case '24h-after': return '24 Hours After Visit';
       default: return 'Evaluation';
     }
   };
 
   const getPhaseColor = () => {
     switch (phase) {
-      case 'pre-visit': return 'bg-sage/20 text-sage-foreground border-sage/30';
-      case 'post-visit': return 'bg-coral/20 text-coral-foreground border-coral/30';
-      case '24h-after': return 'bg-primary/20 text-primary-foreground border-primary/30';
+      case 'pre-visit': return 'bg-olive/20 text-olive-foreground border-olive/30';
+      case 'post-visit': return 'bg-terracotta/20 text-terracotta-foreground border-terracotta/30';
+      case '24h-after': return 'bg-sage/20 text-sage-foreground border-sage/30';
       default: return 'bg-muted/20 text-muted-foreground border-muted/30';
     }
   };
 
+  const getPhaseIcon = () => {
+    switch (phase) {
+      case 'pre-visit': return <FileText className="h-5 w-5" />;
+      case 'post-visit': return <Activity className="h-5 w-5" />;
+      case '24h-after': return <Heart className="h-5 w-5" />;
+      default: return <FileText className="h-5 w-5" />;
+    }
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{getPhaseTitle()}</CardTitle>
-          <Badge className={getPhaseColor()}>{phase}</Badge>
+    <Card className="border-parchment/30 bg-parchment/5">
+      <CardHeader className="text-center">
+        <div className="flex items-center justify-center gap-3 mb-2">
+          {getPhaseIcon()}
+          <Badge className={`${getPhaseColor()} px-4 py-2`}>
+            {getPhaseTitle()}
+          </Badge>
         </div>
+        <CardTitle className="text-xl text-terracotta-foreground">
+          Micro-Diary Study
+        </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Share your thoughts and experiences
+          Please answer both questions thoughtfully based on your experience
         </p>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {questions.map((question) => (
-          <div key={question.id} className="space-y-3">
-            <div className="flex items-center gap-2">
-              {question.type === 'feeling' ? (
-                <Heart className="h-4 w-4 text-coral" />
-              ) : (
-                <Activity className="h-4 w-4 text-sage" />
-              )}
-              <Label htmlFor={question.id} className="text-sm font-medium">
-                {question.text}
-              </Label>
+      <CardContent className="space-y-8">
+        {questions.map((question, index) => (
+          <div key={question.id} className="space-y-4">
+            <div className="flex items-start gap-3">
+              <div className={`p-2 rounded-full ${
+                question.type === 'feeling' 
+                  ? 'bg-coral/10 text-coral' 
+                  : 'bg-sage/10 text-sage'
+              }`}>
+                {question.type === 'feeling' ? (
+                  <Heart className="h-5 w-5" />
+                ) : (
+                  <Activity className="h-5 w-5" />
+                )}
+              </div>
+              <div className="flex-1 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-xs">
+                    {question.type === 'feeling' ? 'Sentimental/Emotional' : 'Behavioral/Interactive'}
+                  </Badge>
+                  <span className="text-xs text-muted-foreground">Question {index + 1}</span>
+                </div>
+                <Label htmlFor={question.id} className="text-sm font-medium leading-relaxed block">
+                  {question.text}
+                </Label>
+              </div>
             </div>
             <Textarea
               id={question.id}
               placeholder={question.placeholder}
               value={responses[question.id as keyof typeof responses] || ''}
               onChange={(e) => handleResponseChange(question.id, e.target.value)}
-              className="min-h-[100px] resize-none"
+              className="min-h-[120px] resize-none border-parchment/30 focus:border-terracotta/50"
+              rows={4}
             />
           </div>
         ))}

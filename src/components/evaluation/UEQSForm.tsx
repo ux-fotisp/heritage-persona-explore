@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { BarChart3 } from "lucide-react";
 import { UEQSResponse } from "@/lib/evaluationStorage";
 
 interface UEQSFormProps {
@@ -28,19 +30,29 @@ export function UEQSForm({ responses, onChange }: UEQSFormProps) {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">User Experience Questionnaire (UEQ-S)</CardTitle>
+    <Card className="border-terracotta/30 bg-parchment/5">
+      <CardHeader className="text-center">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <BarChart3 className="h-5 w-5 text-terracotta" />
+        </div>
+        <CardTitle className="text-xl text-terracotta-foreground">
+          User Experience Questionnaire (UEQ-S)
+        </CardTitle>
         <p className="text-sm text-muted-foreground">
           Rate your overall experience on each scale from 1 to 7
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
-        {UEQS_ITEMS.map((item) => (
-          <div key={item.id} className="space-y-3">
-            <div className="flex items-center justify-between text-sm font-medium">
-              <span className="text-muted-foreground">{item.left}</span>
-              <span className="text-foreground">{item.right}</span>
+        {UEQS_ITEMS.map((item, index) => (
+          <div key={item.id} className="space-y-3 p-4 rounded-lg border border-border/50 bg-card/50">
+            <div className="flex items-center justify-between text-sm">
+              <Badge variant="outline" className="bg-coral/10 text-coral-foreground border-coral/30">
+                {item.left}
+              </Badge>
+              <span className="text-xs text-muted-foreground">Q{index + 1}</span>
+              <Badge variant="outline" className="bg-sage/10 text-sage-foreground border-sage/30">
+                {item.right}
+              </Badge>
             </div>
             <RadioGroup
               className="grid grid-cols-7 gap-2"
@@ -52,11 +64,11 @@ export function UEQSForm({ responses, onChange }: UEQSFormProps) {
                   <RadioGroupItem 
                     id={`${item.id}-${n}`} 
                     value={String(n)}
-                    className="data-[state=checked]:border-primary data-[state=checked]:bg-primary"
+                    className="data-[state=checked]:border-terracotta data-[state=checked]:bg-terracotta"
                   />
                   <Label 
                     htmlFor={`${item.id}-${n}`} 
-                    className="text-xs font-normal cursor-pointer hover:text-primary"
+                    className="text-xs font-normal cursor-pointer hover:text-terracotta"
                   >
                     {n}
                   </Label>
@@ -65,6 +77,13 @@ export function UEQSForm({ responses, onChange }: UEQSFormProps) {
             </RadioGroup>
           </div>
         ))}
+
+        {/* Progress indicator */}
+        <div className="mt-6 p-4 bg-muted/30 rounded-lg">
+          <p className="text-xs text-muted-foreground text-center">
+            {Object.keys(responses).length} of {UEQS_ITEMS.length} questions answered
+          </p>
+        </div>
       </CardContent>
     </Card>
   );
