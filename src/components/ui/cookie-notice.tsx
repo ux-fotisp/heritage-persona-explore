@@ -14,9 +14,14 @@ export function CookieNotice({ onAccept, onDecline }: CookieNoticeProps) {
   const [showNotice, setShowNotice] = useState(false);
 
   useEffect(() => {
+    // Show notice on first visit or if no consent given
     const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
     if (!consent) {
-      setShowNotice(true);
+      // Small delay to ensure proper rendering
+      const timer = setTimeout(() => {
+        setShowNotice(true);
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -35,8 +40,8 @@ export function CookieNotice({ onAccept, onDecline }: CookieNoticeProps) {
   if (!showNotice) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/95 backdrop-blur-sm border-t border-border">
-      <Card className="max-w-4xl mx-auto p-4">
+    <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 bg-background/98 backdrop-blur-md border-t border-border shadow-lg animate-in slide-in-from-bottom-4 duration-300">
+      <Card className="max-w-4xl mx-auto p-6 shadow-card">
         <div className="flex items-start gap-3">
           <div className="flex items-center gap-2 text-primary mt-1">
             <Cookie className="h-5 w-5" />

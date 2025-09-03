@@ -33,17 +33,9 @@ const deleteCookie = (name: string): void => {
 export const savePersonaToCookie = (persona: PersonaData): boolean => {
   // Check cookie consent before saving
   if (!hasCookieConsent()) {
-    console.log('Cookie consent not given, saving to localStorage as fallback');
-    try {
-      localStorage.setItem('userPersona', JSON.stringify({
-        ...persona,
-        completedAt: new Date().toISOString()
-      }));
-      return true;
-    } catch (error) {
-      console.error('Error saving persona to localStorage:', error);
-      return false;
-    }
+    console.log('Cookie consent not given, persona data will be session-only');
+    // Don't save to localStorage as fallback - respect privacy choice
+    return false;
   }
 
   try {
@@ -87,17 +79,9 @@ export const clearPersonaCookie = (): void => {
 export const savePersonaAssessmentToCookie = (assessment: PersonaAssessment): boolean => {
   // Check cookie consent before saving
   if (!hasCookieConsent()) {
-    console.log('Cookie consent not given, saving to localStorage as fallback');
-    try {
-      localStorage.setItem('personaAssessment', JSON.stringify(assessment));
-      if (assessment.topPersonas.length > 0) {
-        savePersonaToCookie(assessment.topPersonas[0]);
-      }
-      return true;
-    } catch (error) {
-      console.error('Error saving persona assessment to localStorage:', error);
-      return false;
-    }
+    console.log('Cookie consent not given, assessment data will be session-only');
+    // Don't save to localStorage as fallback - respect privacy choice
+    return false;
   }
 
   try {
