@@ -19,6 +19,8 @@ import {
   Heart,
   Calendar,
   X,
+  Shield,
+  Plus,
 } from "lucide-react";
 
 interface BurgerMenuProps {

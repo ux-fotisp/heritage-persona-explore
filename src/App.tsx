@@ -22,6 +22,9 @@ import Profile from "./pages/Profile";
 import Suggest from "./pages/Suggest";
 import NotFound from "./pages/NotFound";
 import RateExperience from "./pages/RateExperience";
+import Privacy from "./pages/Privacy";
+import FAQ from "./pages/FAQ";
+import YourListings from "./pages/YourListings";
 import EvaluationFlow from "./components/evaluation/EvaluationFlow";
 
 const queryClient = new QueryClient();
@@ -51,6 +54,9 @@ const App = () => (
             <Route path="/blog" element={<Blog />} />
             <Route path="/about" element={<About />} />
             <Route path="/favorites" element={<Favorites />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/your-listings" element={<YourListings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

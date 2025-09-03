@@ -190,18 +190,24 @@ const Index = () => {
               >
                 About This App
               </button>
-              <a href="/terms" className="hover:text-foreground transition-colors">
-                Terms & Services
-              </a>
-              <a href="/privacy" className="hover:text-foreground transition-colors">
+              <button 
+                onClick={() => navigate("/your-listings")} 
+                className="hover:text-foreground transition-colors cursor-pointer"
+              >
+                Your Listings
+              </button>
+              <button 
+                onClick={() => navigate("/privacy")} 
+                className="hover:text-foreground transition-colors cursor-pointer"
+              >
                 Privacy
-              </a>
-              <a href="/add-listings" className="hover:text-foreground transition-colors">
-                Add your listings
-              </a>
-              <a href="/faq" className="hover:text-foreground transition-colors">
+              </button>
+              <button 
+                onClick={() => navigate("/faq")} 
+                className="hover:text-foreground transition-colors cursor-pointer"
+              >
                 FAQ
-              </a>
+              </button>
               <a href="/fotis" className="hover:text-foreground transition-colors">
                 FotisP
               </a>
