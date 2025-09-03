@@ -1,5 +1,6 @@
 // Cookie-based storage utilities for persona data
 import { PersonaData, PersonaAssessment } from './personaStorage';
+import { hasCookieConsent } from '@/components/ui/cookie-notice';
 
 const PERSONA_COOKIE_KEY = 'ccim_user_persona';
 const ASSESSMENT_COOKIE_KEY = 'ccim_persona_assessment';
@@ -30,6 +31,21 @@ const deleteCookie = (name: string): void => {
 
 // Persona cookie storage functions
 export const savePersonaToCookie = (persona: PersonaData): boolean => {
+  // Check cookie consent before saving
+  if (!hasCookieConsent()) {
+    console.log('Cookie consent not given, saving to localStorage as fallback');
+    try {
+      localStorage.setItem('userPersona', JSON.stringify({
+        ...persona,
+        completedAt: new Date().toISOString()
+      }));
+      return true;
+    } catch (error) {
+      console.error('Error saving persona to localStorage:', error);
+      return false;
+    }
+  }
+
   try {
     const personaWithTimestamp = {
       ...persona,
@@ -69,6 +85,21 @@ export const clearPersonaCookie = (): void => {
 };
 
 export const savePersonaAssessmentToCookie = (assessment: PersonaAssessment): boolean => {
+  // Check cookie consent before saving
+  if (!hasCookieConsent()) {
+    console.log('Cookie consent not given, saving to localStorage as fallback');
+    try {
+      localStorage.setItem('personaAssessment', JSON.stringify(assessment));
+      if (assessment.topPersonas.length > 0) {
+        savePersonaToCookie(assessment.topPersonas[0]);
+      }
+      return true;
+    } catch (error) {
+      console.error('Error saving persona assessment to localStorage:', error);
+      return false;
+    }
+  }
+
   try {
     const assessmentJson = JSON.stringify(assessment);
     setCookie(ASSESSMENT_COOKIE_KEY, assessmentJson);
