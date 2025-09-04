@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { BottomNav } from "@/components/navigation/BottomNav";
 import { CookieNotice } from "@/components/ui/cookie-notice";
+import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Onboarding from "./pages/Onboarding";
 import PersonaQuestionnaire from "./pages/PersonaQuestionnaire";
@@ -34,7 +35,8 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
         <div className="min-h-screen bg-background pb-16">
           <Routes>
             <Route path="/" element={<Index />} />
@@ -63,7 +65,8 @@ const App = () => (
           <BottomNav />
         </div>
         <CookieNotice />
-      </BrowserRouter>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -1,8 +1,11 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Menu, ArrowLeft, Bell } from "lucide-react";
+import { Menu, ArrowLeft, Bell, User } from "lucide-react";
 import { useState } from "react";
 import { BurgerMenu } from "./BurgerMenu";
 import { NotificationDrawer } from "./NotificationDrawer";
+import { UserDropdown } from "@/components/auth/UserDropdown";
+import { LoginModal } from "@/components/auth/LoginModal";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AppHeaderProps {
   showBackButton?: boolean;
@@ -15,6 +18,8 @@ export function AppHeader({ showBackButton = true, backPath = "/", title }: AppH
   const location = useLocation();
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const handleBack = () => {
     if (backPath) {
@@ -48,16 +53,29 @@ export function AppHeader({ showBackButton = true, backPath = "/", title }: AppH
           <h1 className="text-lg font-semibold text-foreground">{title}</h1>
         )}
         
-        <button 
-          className="p-3 rounded-full bg-surface/20 backdrop-blur-sm relative"
-          onClick={() => setIsNotificationOpen(true)}
-        >
-          <Bell className="h-6 w-6 text-foreground" />
-          {/* Notification badge */}
-          <div className="absolute -top-1 -right-1 w-5 h-5 bg-destructive rounded-full flex items-center justify-center">
-            <span className="text-xs text-destructive-foreground font-medium">3</span>
-          </div>
-        </button>
+        <div className="flex items-center gap-3">
+          <button 
+            className="p-3 rounded-full bg-surface/20 backdrop-blur-sm relative"
+            onClick={() => setIsNotificationOpen(true)}
+          >
+            <Bell className="h-6 w-6 text-foreground" />
+            {/* Notification badge */}
+            <div className="absolute -top-1 -right-1 w-5 h-5 bg-destructive rounded-full flex items-center justify-center">
+              <span className="text-xs text-destructive-foreground font-medium">3</span>
+            </div>
+          </button>
+
+          {isAuthenticated ? (
+            <UserDropdown />
+          ) : (
+            <button 
+              className="p-3 rounded-full bg-surface/20 backdrop-blur-sm"
+              onClick={() => setIsLoginOpen(true)}
+            >
+              <User className="h-6 w-6 text-foreground" />
+            </button>
+          )}
+        </div>
       </div>
 
       <BurgerMenu 
@@ -68,6 +86,11 @@ export function AppHeader({ showBackButton = true, backPath = "/", title }: AppH
       <NotificationDrawer 
         isOpen={isNotificationOpen} 
         onClose={() => setIsNotificationOpen(false)} 
+      />
+      
+      <LoginModal 
+        isOpen={isLoginOpen} 
+        onClose={() => setIsLoginOpen(false)} 
       />
     </>
   );

@@ -3,9 +3,21 @@ import { Button } from "@/components/ui/button";
 import { BottomNav } from "@/components/navigation/BottomNav";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { Play } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Onboarding() {
   const navigate = useNavigate();
+  const { isAuthenticated, setRedirectPath } = useAuth();
+
+  const handleCreatePersona = () => {
+    if (!isAuthenticated) {
+      setRedirectPath('/persona-questionnaire');
+      // Navigate back to home page where user can login
+      navigate('/');
+      return;
+    }
+    navigate('/persona-questionnaire');
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -46,7 +58,7 @@ export default function Onboarding() {
           
           {/* CTA Button */}
           <Button 
-            onClick={() => navigate("/persona-questionnaire")}
+            onClick={handleCreatePersona}
             className="w-full py-4 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full h-auto"
           >
             Create My Travel Persona
