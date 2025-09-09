@@ -49,23 +49,15 @@ export function UserDropdown() {
           className="cursor-pointer"
         >
           <User className="mr-2 h-4 w-4" />
-          Profile Settings
+          Profile
         </DropdownMenuItem>
         
         <DropdownMenuItem 
-          onClick={() => handleNavigation('/settings')}
-          className="cursor-pointer"
-        >
-          <Settings className="mr-2 h-4 w-4" />
-          App Settings
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem 
-          onClick={() => handleNavigation('/help')}
+          onClick={() => handleNavigation('/faq')}
           className="cursor-pointer"
         >
           <HelpCircle className="mr-2 h-4 w-4" />
-          Help and Support
+          Help & FAQ
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />

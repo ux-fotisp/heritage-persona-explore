@@ -15,10 +15,17 @@ export function PersonaRecommendations() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Try migration first, then load from cookie
+    // Try migration first, then load from cookie (privacy compliant)
     migratePersonaToCookies();
-    const savedPersona = getPersonaFromCookie() || getPersona(); // fallback to localStorage
-    setPersona(savedPersona);
+    const savedPersona = getPersonaFromCookie();
+    if (!savedPersona) {
+      // Only fall back to localStorage if cookie storage failed due to no consent
+      console.log('No persona found in cookies, checking localStorage as fallback');
+      const fallbackPersona = getPersona();
+      setPersona(fallbackPersona);
+    } else {
+      setPersona(savedPersona);
+    }
   }, []);
 
   const getPersonaTraits = (persona: PersonaData): string[] => {
@@ -57,8 +64,14 @@ export function PersonaRecommendations() {
 
   const handleRefreshRecommendations = () => {
     migratePersonaToCookies();
-    const savedPersona = getPersonaFromCookie() || getPersona(); // fallback to localStorage
-    setPersona(savedPersona);
+    const savedPersona = getPersonaFromCookie();
+    if (!savedPersona) {
+      // Only fall back to localStorage if cookie storage failed due to no consent
+      const fallbackPersona = getPersona();
+      setPersona(fallbackPersona);
+    } else {
+      setPersona(savedPersona);
+    }
     toast({
       title: "Recommendations Updated",
       description: "Refreshed based on your current persona"
@@ -171,10 +184,15 @@ export function PersonaRecommendations() {
                   matchScore={85}
                   matchedPersonas={getPersonaTraits(persona)}
                   onAddToTrip={() => {
-                    const existing: string[] = JSON.parse(localStorage.getItem("plannedSites") || "[]");
-                    const merged = Array.from(new Set([...existing, site.id]));
-                    localStorage.setItem("plannedSites", JSON.stringify(merged));
-                    toast({ title: "Added to Plan", description: "Site added to your trip plan" });
+                    // Check if we can use localStorage (basic functionality)
+                    try {
+                      const existing: string[] = JSON.parse(localStorage.getItem("plannedSites") || "[]");
+                      const merged = Array.from(new Set([...existing, site.id]));
+                      localStorage.setItem("plannedSites", JSON.stringify(merged));
+                      toast({ title: "Added to Plan", description: "Site added to your trip plan" });
+                    } catch (error) {
+                      toast({ title: "Note", description: "Enable cookies to save your trip plans persistently" });
+                    }
                   }}
                   onRate={() => window.location.href = `/rate/${site.id}`}
                 />

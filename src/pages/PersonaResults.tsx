@@ -47,18 +47,19 @@ export default function PersonaResults() {
 
   useEffect(() => {
     if (stateData?.topPersonas && stateData?.allPersonas) {
-      // Save to both localStorage (fallback) and cookies (primary)
-      savePersonaAssessment({
+      // Try to save to cookies first (respects privacy)
+      const saved = savePersonaAssessmentToCookie({
         topPersonas: stateData.topPersonas,
         allPersonas: stateData.allPersonas,
         completedAt: new Date().toISOString(),
       });
       
-      savePersonaAssessmentToCookie({
-        topPersonas: stateData.topPersonas,
-        allPersonas: stateData.allPersonas,
-        completedAt: new Date().toISOString(),
-      });
+      // Only use localStorage as fallback if cookies failed (privacy respected)
+      if (!saved) {
+        console.log('Cookie storage failed, data will be session-only');
+        // Store in memory only for current session
+        setData({ topPersonas: stateData.topPersonas, allPersonas: stateData.allPersonas });
+      }
       return;
     }
     

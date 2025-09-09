@@ -30,17 +30,16 @@ interface BurgerMenuProps {
 
 const menuItems = [
   { icon: FileText, label: "Blog Posts", path: "/blog", description: "Latest travel stories and guides" },
-  { icon: Star, label: "Popular Ratings", path: "/ratings", description: "Top-rated sites and experiences" },
-  { icon: MapPin, label: "My Trips", path: "/trips", description: "Manage your travel itineraries" },
   { icon: Heart, label: "Favorites", path: "/favorites", description: "Your saved heritage sites" },
-  { icon: Calendar, label: "Events", path: "/events", description: "Cultural events and festivals" },
+  { icon: Plus, label: "Your Listings", path: "/your-listings", description: "Manage your heritage listings" },
   { icon: HelpCircle, label: "About This App", path: "/about", description: "Learn about our research project" },
+  { icon: Shield, label: "Privacy Policy", path: "/privacy", description: "How we protect your data" },
+  { icon: HelpCircle, label: "FAQ", path: "/faq", description: "Frequently asked questions" },
 ];
 
 const secondaryItems = [
-  { icon: User, label: "Profile Settings", path: "/profile/settings" },
-  { icon: Settings, label: "App Settings", path: "/settings" },
-  { icon: HelpCircle, label: "Help & Support", path: "/help" },
+  { icon: User, label: "Profile", path: "/profile" },
+  { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
 export function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
