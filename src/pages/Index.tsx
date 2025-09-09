@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, MapPin, Calendar, BarChart3, Sparkles, Globe } from "lucide-react";
+import { AppHeader } from "@/components/navigation/AppHeader";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -49,6 +50,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
+      <AppHeader showBackButton={false} />
       <div className="container max-w-4xl mx-auto px-4 py-8">
         <div className="space-y-12">
           {/* Hero Section */}

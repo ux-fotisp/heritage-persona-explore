@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { BottomNav } from "@/components/navigation/BottomNav";
 import { CookieNotice } from "@/components/ui/cookie-notice";
 import { AuthProvider } from "@/hooks/useAuth";
@@ -41,10 +42,26 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/persona-questionnaire" element={<PersonaQuestionnaire />} />
-            <Route path="/persona-selection" element={<PersonaSelection />} />
-            <Route path="/persona-confirmation" element={<PersonaConfirmation />} />
-            <Route path="/persona-results" element={<PersonaResults />} />
+            <Route path="/persona-questionnaire" element={
+              <ProtectedRoute>
+                <PersonaQuestionnaire />
+              </ProtectedRoute>
+            } />
+            <Route path="/persona-selection" element={
+              <ProtectedRoute>
+                <PersonaSelection />
+              </ProtectedRoute>
+            } />
+            <Route path="/persona-confirmation" element={
+              <ProtectedRoute>
+                <PersonaConfirmation />
+              </ProtectedRoute>
+            } />
+            <Route path="/persona-results" element={
+              <ProtectedRoute>
+                <PersonaResults />
+              </ProtectedRoute>
+            } />
             <Route path="/discover" element={<Discover />} />
             <Route path="/search" element={<Search />} />
             <Route path="/suggest" element={<Suggest />} />

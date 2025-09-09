@@ -12,8 +12,8 @@ export default function Onboarding() {
   const handleCreatePersona = () => {
     if (!isAuthenticated) {
       setRedirectPath('/persona-questionnaire');
-      // Navigate back to home page where user can login
-      navigate('/');
+      // This will trigger the LoginModal to open
+      navigate('/?login=true');
       return;
     }
     navigate('/persona-questionnaire');

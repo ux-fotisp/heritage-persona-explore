@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { Menu, ArrowLeft, Bell, User } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BurgerMenu } from "./BurgerMenu";
 import { NotificationDrawer } from "./NotificationDrawer";
 import { UserDropdown } from "@/components/auth/UserDropdown";
@@ -20,6 +20,16 @@ export function AppHeader({ showBackButton = true, backPath = "/", title }: AppH
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const { isAuthenticated } = useAuth();
+
+  // Check if login should be opened based on URL parameter
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    if (urlParams.get('login') === 'true') {
+      setIsLoginOpen(true);
+      // Clean up the URL
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.search, location.pathname, navigate]);
 
   const handleBack = () => {
     if (backPath) {
