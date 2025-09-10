@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Drawer,
   DrawerContent,
@@ -9,80 +9,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  Bell,
-  MapPin,
-  Calendar,
-  Heart,
-  Users,
-  X,
-  Trash2,
-} from "lucide-react";
+import { Bell, X } from "lucide-react";
+import { useNotifications } from "@/hooks/useNotifications";
 
 interface NotificationDrawerProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type NotificationItem = {
-  id: string;
-  type: string;
-  icon: any;
-  title: string;
-  message: string;
-  time: string;
-  unread: boolean;
-};
-
-const staticNotifications: NotificationItem[] = [
-  {
-    id: "n1",
-    type: "new_site",
-    icon: MapPin,
-    title: "New Heritage Site Added",
-    message: "Ancient Palace Complex has been added to your area",
-    time: "2 hours ago",
-    unread: true,
-  },
-  {
-    id: "n2",
-    type: "event",
-    icon: Calendar,
-    title: "Cultural Festival Reminder",
-    message: "Water Festival starts tomorrow in your saved locations",
-    time: "5 hours ago",
-    unread: true,
-  },
-];
-
 export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps) {
-  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const { notifications, unreadCount, loadNotifications, markAllRead, deleteNotification } = useNotifications();
 
   useEffect(() => {
-    const reminders = JSON.parse(localStorage.getItem("ueqsReminders") || "[]");
-    const mapped: NotificationItem[] = reminders.map((r: any) => ({
-      id: r.id,
-      type: "ueqs",
-      icon: Bell,
-      title: r.title,
-      message: r.message,
-      time: r.when,
-      unread: true,
-    }));
-    setNotifications([...mapped, ...staticNotifications]);
-  }, [isOpen]);
-
-  const unreadCount = notifications.filter((n) => n.unread).length;
-
-  const handleMarkAllRead = () => {
-    // TODO: Implement mark all as read functionality
-    console.log("Mark all notifications as read");
-  };
-
-  const handleDeleteNotification = (id: string) => {
-    // TODO: Implement delete notification functionality
-    console.log("Delete notification:", id);
-  };
+    if (isOpen) {
+      loadNotifications();
+    }
+  }, [isOpen, loadNotifications]);
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose} direction="right">
@@ -98,7 +40,7 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
           </div>
           <div className="flex items-center gap-2">
             {unreadCount > 0 && (
-              <Button variant="ghost" size="sm" onClick={handleMarkAllRead}>
+              <Button variant="ghost" size="sm" onClick={markAllRead}>
                 Mark all read
               </Button>
             )}
@@ -151,7 +93,7 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
                           variant="ghost"
                           size="icon"
                           className="h-6 w-6 hover:bg-destructive/10 hover:text-destructive"
-                          onClick={() => handleDeleteNotification(notification.id)}
+                          onClick={() => deleteNotification(notification.id)}
                         >
                           <X className="h-3 w-3" />
                         </Button>

@@ -6,6 +6,7 @@ import { NotificationDrawer } from "./NotificationDrawer";
 import { UserDropdown } from "@/components/auth/UserDropdown";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { useAuth } from "@/hooks/useAuth";
+import { useNotifications } from "@/hooks/useNotifications";
 
 interface AppHeaderProps {
   showBackButton?: boolean;
@@ -20,6 +21,7 @@ export function AppHeader({ showBackButton = true, backPath = "/", title }: AppH
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const { isAuthenticated } = useAuth();
+  const { unreadCount } = useNotifications();
 
   // Check if login should be opened based on URL parameter
   useEffect(() => {
@@ -70,9 +72,11 @@ export function AppHeader({ showBackButton = true, backPath = "/", title }: AppH
           >
             <Bell className="h-6 w-6 text-foreground" />
             {/* Notification badge */}
-            <div className="absolute -top-1 -right-1 w-5 h-5 bg-destructive rounded-full flex items-center justify-center">
-              <span className="text-xs text-destructive-foreground font-medium">3</span>
-            </div>
+            {unreadCount > 0 && (
+              <div className="absolute -top-1 -right-1 w-5 h-5 bg-destructive rounded-full flex items-center justify-center">
+                <span className="text-xs text-destructive-foreground font-medium">{unreadCount}</span>
+              </div>
+            )}
           </button>
 
           {isAuthenticated ? (
