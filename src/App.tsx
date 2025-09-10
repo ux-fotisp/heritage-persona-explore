@@ -27,6 +27,7 @@ import RateExperience from "./pages/RateExperience";
 import Privacy from "./pages/Privacy";
 import FAQ from "./pages/FAQ";
 import YourListings from "./pages/YourListings";
+import StudyEnrollment from "./pages/StudyEnrollment";
 import EvaluationFlow from "./components/evaluation/EvaluationFlow";
 
 const queryClient = new QueryClient();
@@ -76,6 +77,7 @@ const App = () => (
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/your-listings" element={<YourListings />} />
+            <Route path="/study-enrollment" element={<StudyEnrollment />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
