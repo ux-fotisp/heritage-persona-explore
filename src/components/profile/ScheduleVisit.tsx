@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { type UserDestination } from '@/lib/destinationStorage';
 import { scheduleVisit, type ScheduledVisit } from '@/lib/visitStorage';
+import { getStudyParticipant } from '@/lib/studyStorage';
 
 interface ScheduleVisitProps {
   destinations: UserDestination[];
@@ -52,7 +53,11 @@ export function ScheduleVisit({ destinations, onVisitScheduled }: ScheduleVisitP
     }
 
     try {
-      const scheduledVisit = scheduleVisit(selectedDestination, destination, visitDate);
+      // Check if user is enrolled in study
+      const participant = getStudyParticipant();
+      const studyParticipantId = participant?.consentGiven ? participant.id : undefined;
+      
+      const scheduledVisit = scheduleVisit(selectedDestination, destination, visitDate, studyParticipantId);
       onVisitScheduled(scheduledVisit);
       
       // Reset form

@@ -28,6 +28,7 @@ import Privacy from "./pages/Privacy";
 import FAQ from "./pages/FAQ";
 import YourListings from "./pages/YourListings";
 import StudyEnrollment from "./pages/StudyEnrollment";
+import StudyDashboard from "./pages/StudyDashboard";
 import EvaluationFlow from "./components/evaluation/EvaluationFlow";
 
 const queryClient = new QueryClient();
@@ -77,7 +78,8 @@ const App = () => (
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/your-listings" element={<YourListings />} />
-            <Route path="/study-enrollment" element={<StudyEnrollment />} />
+          <Route path="/study-enrollment" element={<StudyEnrollment />} />
+          <Route path="/study-dashboard" element={<StudyDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

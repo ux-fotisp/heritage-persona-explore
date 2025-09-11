@@ -7,11 +7,34 @@ export interface ScheduledVisit {
   visitDate: string;
   dateScheduled: string;
   status: 'scheduled' | 'completed' | 'cancelled';
+  // Study-related fields
+  studyParticipantId?: string;
+  enrolledInStudy: boolean;
+  studyPhases: {
+    'pre-visit': {
+      completed: boolean;
+      completedAt?: string;
+      evaluationId?: string;
+    };
+    'post-visit': {
+      completed: boolean;
+      completedAt?: string;
+      evaluationId?: string;
+    };
+    '24h-after': {
+      completed: boolean;
+      completedAt?: string;
+      evaluationId?: string;
+    };
+  };
+  nextPendingPhase?: 'pre-visit' | 'post-visit' | '24h-after' | null;
 }
 
 const VISITS_STORAGE_KEY = 'scheduledVisits';
 
-export const scheduleVisit = (destinationId: string, destination: { destinationCountry: string; destinationCity: string; destinationSite: string }, visitDate: Date): ScheduledVisit => {
+export const scheduleVisit = (destinationId: string, destination: { destinationCountry: string; destinationCity: string; destinationSite: string }, visitDate: Date, studyParticipantId?: string): ScheduledVisit => {
+  const enrolledInStudy = !!studyParticipantId;
+  
   const scheduledVisit: ScheduledVisit = {
     id: crypto.randomUUID(),
     destinationId,
@@ -20,7 +43,15 @@ export const scheduleVisit = (destinationId: string, destination: { destinationC
     destinationSite: destination.destinationSite,
     visitDate: visitDate.toISOString(),
     dateScheduled: new Date().toISOString(),
-    status: 'scheduled'
+    status: 'scheduled',
+    studyParticipantId,
+    enrolledInStudy,
+    studyPhases: {
+      'pre-visit': { completed: false },
+      'post-visit': { completed: false },
+      '24h-after': { completed: false }
+    },
+    nextPendingPhase: enrolledInStudy ? 'pre-visit' : null
   };
   
   const existingVisits = getScheduledVisits();

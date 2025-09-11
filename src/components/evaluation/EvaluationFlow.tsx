@@ -20,6 +20,8 @@ import {
   hasCompletedPhase 
 } from "@/lib/evaluationStorage";
 import { getScheduledVisits } from "@/lib/visitStorage";
+import { markVisitPhaseCompleted } from "@/lib/studyVisitHelpers";
+import { markPhaseCompleted } from "@/lib/studyStorage";
 import { HERITAGE_SITES } from "@/data/heritageSites";
 
 export default function EvaluationFlow() {
@@ -77,6 +79,12 @@ export default function EvaluationFlow() {
 
     const success = saveEvaluationEntry(entry);
     if (success) {
+      // Mark phase as completed in study tracking
+      if (visit.enrolledInStudy && visit.studyParticipantId) {
+        markPhaseCompleted(visitId!, phase, entry.id);
+        markVisitPhaseCompleted(visitId!, phase, entry.id);
+      }
+      
       toast.success("Evaluation submitted successfully!");
       navigate(-1);
     } else {
