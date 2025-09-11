@@ -1,15 +1,30 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Brain } from "lucide-react";
+import { Heart, Brain, SkipForward } from "lucide-react";
 import { GENEVA_EMOTION_WHEEL, EmotionWheelData } from "@/lib/evaluationStorage";
 
 interface GenevaEmotionWheelProps {
   value: EmotionWheelData | null;
-  onChange: (data: EmotionWheelData) => void;
+  onChange: (data: EmotionWheelData | null) => void;
+  isOptional?: boolean;
 }
 
-export function GenevaEmotionWheel({ value, onChange }: GenevaEmotionWheelProps) {
+export function GenevaEmotionWheel({ value, onChange, isOptional = true }: GenevaEmotionWheelProps) {
+  const [skipped, setSkipped] = useState(false);
+
+  const handleSkip = () => {
+    setSkipped(true);
+    onChange(null);
+  };
+
+  const handleUnskip = () => {
+    setSkipped(false);
+    onChange({});
+  };
+
   const currentValues = value || {};
 
   const handleEmotionChange = (emotionPair: string, newValue: number[]) => {
@@ -29,18 +44,45 @@ export function GenevaEmotionWheel({ value, onChange }: GenevaEmotionWheelProps)
     return `${value}`;
   };
 
-  const getSliderColor = (value: number) => {
-    if (value === 0) return "bg-muted";
-    if (value > 0) return "bg-sage";
-    return "bg-coral";
-  };
+  if (skipped) {
+    return (
+      <Card className="border-parchment/30 bg-parchment/5">
+        <CardContent className="pt-6 text-center space-y-4">
+          <div className="text-muted-foreground">
+            <SkipForward className="h-8 w-8 mx-auto mb-2" />
+            <p>Emotion wheel skipped</p>
+          </div>
+          <Button 
+            variant="outline" 
+            onClick={handleUnskip}
+            className="border-terracotta/30"
+          >
+            Complete Emotion Wheel
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="border-terracotta/20 bg-parchment/5">
       <CardHeader className="text-center">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <Heart className="h-5 w-5 text-coral" />
-          <Brain className="h-5 w-5 text-sage" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Heart className="h-5 w-5 text-coral" />
+            <Brain className="h-5 w-5 text-sage" />
+          </div>
+          {isOptional && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleSkip}
+              className="text-muted-foreground hover:text-terracotta"
+            >
+              <SkipForward className="h-4 w-4 mr-1" />
+              Skip
+            </Button>
+          )}
         </div>
         <CardTitle className="text-xl text-terracotta-foreground">
           Geneva Emotion Wheel

@@ -42,7 +42,7 @@ export default function EvaluationFlow() {
     feeling: '',
     behavior: ''
   });
-  const [emotionWheel, setEmotionWheel] = useState<EmotionWheelData | null>(null);
+  const [emotionWheel, setEmotionWheel] = useState<EmotionWheelData | null | undefined>(undefined);
   const [ueqsResponses, setUEQSResponses] = useState<UEQSResponse>({});
   const [comments, setComments] = useState('');
 
@@ -50,7 +50,7 @@ export default function EvaluationFlow() {
   const requiresEmotionWheel = phase === 'post-visit' || phase === '24h-after';
   const allQuestionsAnswered = questionResponses.feeling.trim() && questionResponses.behavior.trim();
   const ueqsComplete = !requiresUEQS || Object.keys(ueqsResponses).length === 8;
-  const emotionWheelComplete = !requiresEmotionWheel || (emotionWheel && Object.keys(emotionWheel).length > 0);
+  const emotionWheelComplete = !requiresEmotionWheel || (emotionWheel !== undefined); // Allow null (skipped)
   const canSubmit = allQuestionsAnswered && emotionWheelComplete && ueqsComplete;
 
   const handleSubmit = async () => {
@@ -154,11 +154,12 @@ export default function EvaluationFlow() {
           onChange={setQuestionResponses}
         />
 
-        {/* Geneva Emotion Wheel (only for post-visit and 24h-after) */}
+        {/* Geneva Emotion Wheel (optional for post-visit and 24h-after) */}
         {requiresEmotionWheel && (
           <GenevaEmotionWheel
-            value={emotionWheel}
-            onChange={setEmotionWheel}
+            value={emotionWheel === undefined ? null : emotionWheel}
+            onChange={(data) => setEmotionWheel(data)}
+            isOptional={true}
           />
         )}
 
