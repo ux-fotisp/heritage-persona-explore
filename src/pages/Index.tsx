@@ -115,10 +115,19 @@ const Index = () => {
               <Button 
                 variant="outline" 
                 size="lg"
-                onClick={() => navigate("/discover")}
-                className="text-lg px-8 py-4 border-2 border-foreground/20 text-foreground hover:bg-foreground/10 rounded-full"
+                onClick={() => navigate("/trip-creation")}
+                className="text-lg px-8 py-4 border-2 border-primary/30 text-primary hover:bg-primary/10 rounded-full"
               >
-                Explore sites in your area
+                Plan a Cultural Trip
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                size="lg"
+                onClick={() => navigate("/discover")}
+                className="text-lg px-8 py-4 text-muted-foreground hover:text-foreground hover:bg-foreground/5 rounded-full"
+              >
+                Continue as Guest
               </Button>
             </div>
           </div>

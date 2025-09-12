@@ -29,6 +29,9 @@ import FAQ from "./pages/FAQ";
 import YourListings from "./pages/YourListings";
 import StudyEnrollment from "./pages/StudyEnrollment";
 import StudyDashboard from "./pages/StudyDashboard";
+import TripCreation from "./pages/TripCreation";
+import TripPersonaSelection from "./components/trip/TripPersonaSelection";
+import PersonaBasedRecommendations from "./components/trip/PersonaBasedRecommendations";
 import EvaluationFlow from "./components/evaluation/EvaluationFlow";
 
 const queryClient = new QueryClient();
@@ -78,8 +81,14 @@ const App = () => (
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/your-listings" element={<YourListings />} />
-          <Route path="/study-enrollment" element={<StudyEnrollment />} />
-          <Route path="/study-dashboard" element={<StudyDashboard />} />
+            <Route path="/study-enrollment" element={<StudyEnrollment />} />
+            <Route path="/study-dashboard" element={<StudyDashboard />} />
+            
+            {/* Trip Planning Routes */}
+            <Route path="/trip-creation" element={<TripCreation />} />
+            <Route path="/trip/:tripId/personas" element={<TripPersonaSelection />} />
+            <Route path="/trip/:tripId/recommendations" element={<PersonaBasedRecommendations />} />
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
