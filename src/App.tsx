@@ -33,6 +33,7 @@ import TripCreation from "./pages/TripCreation";
 import TripPersonaSelection from "./components/trip/TripPersonaSelection";
 import PersonaBasedRecommendations from "./components/trip/PersonaBasedRecommendations";
 import EvaluationFlow from "./components/evaluation/EvaluationFlow";
+import MuseumDetail from "./pages/MuseumDetail";
 
 const queryClient = new QueryClient();
 
@@ -83,6 +84,9 @@ const App = () => (
             <Route path="/your-listings" element={<YourListings />} />
             <Route path="/study-enrollment" element={<StudyEnrollment />} />
             <Route path="/study-dashboard" element={<StudyDashboard />} />
+            
+            {/* Museum Detail Prototype */}
+            <Route path="/museum-detail" element={<MuseumDetail />} />
             
             {/* Trip Planning Routes */}
             <Route path="/trip-creation" element={<TripCreation />} />
