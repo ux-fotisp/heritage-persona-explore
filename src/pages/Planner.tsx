@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -11,7 +11,7 @@ import { SiteCard } from "@/components/heritage/SiteCard";
 import { PersonaRecommendations } from "@/components/planner/PersonaRecommendations";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { HERITAGE_SITES } from "@/data/heritageSites";
-import { Search, MapPin, Filter, Map, List, Navigation, Heart, Star, Clock } from "lucide-react";
+import { Search, MapPin, Filter, Map, List, Navigation, Heart, Star, Clock, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,11 @@ export default function Planner() {
   const navigate = useNavigate();
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const searchResultsRef = useRef<HTMLDivElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedCountry, setSelectedCountry] = useState<string>("all");
   const [browseView, setBrowseView] = useState<"grid" | "map">("grid");
@@ -31,15 +35,55 @@ export default function Planner() {
   const categories = Array.from(new Set(HERITAGE_SITES.map(site => site.category)));
   const countries = Array.from(new Set(HERITAGE_SITES.map(site => site.country)));
 
+  // Debounce search term with 800ms delay
+  useEffect(() => {
+    if (searchTerm.length >= 3) {
+      setIsSearching(true);
+      const timer = setTimeout(() => {
+        setDebouncedSearchTerm(searchTerm);
+        setIsSearching(false);
+      }, 800);
+      return () => clearTimeout(timer);
+    } else {
+      setDebouncedSearchTerm("");
+      setIsSearching(false);
+    }
+  }, [searchTerm]);
+
+  // Show/hide search results
+  useEffect(() => {
+    setShowSearchResults(searchTerm.length >= 3);
+  }, [searchTerm]);
+
+  // Close search results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchResultsRef.current && !searchResultsRef.current.contains(event.target as Node)) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   // Filter sites based on search and filters
   const filteredSites = HERITAGE_SITES.filter(site => {
-    const matchesSearch = site.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         site.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchTermToUse = debouncedSearchTerm || searchTerm;
+    const matchesSearch = searchTermToUse === "" || 
+                         site.name.toLowerCase().includes(searchTermToUse.toLowerCase()) ||
+                         site.description.toLowerCase().includes(searchTermToUse.toLowerCase()) ||
+                         site.category.toLowerCase().includes(searchTermToUse.toLowerCase()) ||
+                         site.city.toLowerCase().includes(searchTermToUse.toLowerCase()) ||
+                         site.country.toLowerCase().includes(searchTermToUse.toLowerCase());
     const matchesCategory = selectedCategory === "all" || site.category === selectedCategory;
     const matchesCountry = selectedCountry === "all" || site.country === selectedCountry;
     
     return matchesSearch && matchesCategory && matchesCountry;
   });
+
+  // Search results for dropdown
+  const searchResults = searchTerm.length >= 3 ? filteredSites.slice(0, 8) : [];
 
   const handleAddSite = (siteId: string) => {
     const existing: string[] = JSON.parse(localStorage.getItem("plannedSites") || "[]");
@@ -136,19 +180,101 @@ export default function Planner() {
       <AppHeader showBackButton={false} title="Trip Planner" />
       
       {/* Global Search Box */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
-        <div className="relative max-w-2xl mx-auto">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
+        <div className="relative max-w-2xl mx-auto" ref={searchResultsRef}>
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5 z-10" />
           <Input
             placeholder="Search cultural experiences, museums, sites, restaurants..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-11 h-12 text-base"
+            onFocus={() => searchTerm.length >= 3 && setShowSearchResults(true)}
+            className="pl-11 pr-24 h-12 text-base"
           />
-          {searchTerm && (
-            <Badge variant="secondary" className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              {filteredSites.length} results
-            </Badge>
+          
+          {/* Loading indicator and results count */}
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
+            {isSearching && (
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            )}
+            {searchTerm && (
+              <Badge variant="secondary">
+                {filteredSites.length}
+              </Badge>
+            )}
+          </div>
+
+          {/* Search Results Dropdown */}
+          {showSearchResults && searchResults.length > 0 && (
+            <Card className="absolute top-full left-0 right-0 mt-2 shadow-lg max-h-[70vh] overflow-y-auto z-50 animate-fade-in">
+              <CardContent className="p-0">
+                <div className="py-2">
+                  <div className="px-4 py-2 text-sm font-medium text-muted-foreground border-b border-border">
+                    Search Results {isSearching && <span className="text-xs">(updating...)</span>}
+                  </div>
+                  {searchResults.map((site, index) => (
+                    <div
+                      key={site.id}
+                      className="px-4 py-3 hover:bg-accent cursor-pointer transition-colors border-b border-border last:border-0"
+                      onClick={() => {
+                        navigate(`/museum-detail`);
+                        setShowSearchResults(false);
+                      }}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden bg-muted">
+                          <img 
+                            src={site.image} 
+                            alt={site.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <h4 className="font-medium text-sm line-clamp-1">{site.name}</h4>
+                            <Badge variant="outline" className="text-xs flex-shrink-0">
+                              {site.category}
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+                            {site.description}
+                          </p>
+                          <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <MapPin className="h-3 w-3" />
+                              {site.city}, {site.country}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Star className="h-3 w-3 text-yellow-500" />
+                              {site.rating}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {searchResults.length === 8 && filteredSites.length > 8 && (
+                    <div className="px-4 py-3 text-center text-sm text-muted-foreground bg-muted/50">
+                      {filteredSites.length - 8} more results. Refine your search or browse below.
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* No results message */}
+          {showSearchResults && searchTerm.length >= 3 && searchResults.length === 0 && !isSearching && (
+            <Card className="absolute top-full left-0 right-0 mt-2 shadow-lg z-50 animate-fade-in">
+              <CardContent className="p-6 text-center">
+                <p className="text-sm text-muted-foreground">
+                  No cultural experiences found for "{searchTerm}"
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Try different keywords or browse all sites below
+                </p>
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>
