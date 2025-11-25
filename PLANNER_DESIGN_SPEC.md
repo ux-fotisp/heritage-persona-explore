@@ -13,9 +13,15 @@ The Planner instance serves as the central hub for discovering, exploring, and o
 
 ### Global Search
 - **Position**: Sticky header at the top of the page, below main AppHeader
-- **Functionality**: Real-time filtering across all cultural artifacts (museums, sites, restaurants, exhibits)
+- **Functionality**: Dynamic search across all cultural artifacts (museums, sites, restaurants, exhibits)
 - **Placeholder**: "Search cultural experiences, museums, sites, restaurants..."
-- **Visual Feedback**: Dynamic results counter badge displaying number of matches
+- **Trigger**: Search activates after user types 3+ characters
+- **Debounce**: 800ms latency before updating results
+- **Visual Feedback**: 
+  - Loading spinner during search debounce period
+  - Results counter badge displaying number of matches
+  - Dropdown with instant search results (max 8 items)
+  - Click outside to close results dropdown
 
 ---
 
@@ -48,29 +54,64 @@ The Planner instance serves as the central hub for discovering, exploring, and o
 ```typescript
 // Search state management
 const [searchTerm, setSearchTerm] = useState("");
+const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+const [isSearching, setIsSearching] = useState(false);
+const [showSearchResults, setShowSearchResults] = useState(false);
 
-// Real-time filtering
+// Debounce search with 800ms delay
+useEffect(() => {
+  if (searchTerm.length >= 3) {
+    setIsSearching(true);
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setIsSearching(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  } else {
+    setDebouncedSearchTerm("");
+    setIsSearching(false);
+  }
+}, [searchTerm]);
+
+// Dynamic filtering with debounced search
 const filteredSites = HERITAGE_SITES.filter(site => {
-  const matchesSearch = site.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                       site.description.toLowerCase().includes(searchTerm.toLowerCase());
+  const searchTermToUse = debouncedSearchTerm || searchTerm;
+  const matchesSearch = searchTermToUse === "" || 
+                       site.name.toLowerCase().includes(searchTermToUse.toLowerCase()) ||
+                       site.description.toLowerCase().includes(searchTermToUse.toLowerCase()) ||
+                       site.category.toLowerCase().includes(searchTermToUse.toLowerCase());
   const matchesCategory = selectedCategory === "all" || site.category === selectedCategory;
   const matchesCountry = selectedCountry === "all" || site.country === selectedCountry;
   return matchesSearch && matchesCategory && matchesCountry;
 });
+
+// Search results for dropdown (max 8 items)
+const searchResults = searchTerm.length >= 3 ? filteredSites.slice(0, 8) : [];
 ```
 
 ### UI Components
 - **Search Icon**: Lucide-react `Search` icon, positioned absolute left
-- **Input Field**: Large (h-12), with left padding for icon
-- **Results Badge**: Secondary variant, absolute right positioning
-- **Container**: Sticky positioning with backdrop blur for depth
+- **Input Field**: Large (h-12), with left padding for icon and right padding for indicators
+- **Loading Indicator**: Lucide-react `Loader2` icon with spin animation during debounce
+- **Results Badge**: Secondary variant showing total match count
+- **Results Dropdown**: Card component with max height 70vh, scrollable
+  - Displays up to 8 results with images, titles, descriptions, and metadata
+  - Hover effect on each result item
+  - "More results available" message if > 8 matches
+  - Empty state message when no results found
+- **Container**: Sticky positioning (z-20) with backdrop blur for depth
 
 ### User Experience
-- Instant feedback as user types
-- Visual counter updates in real-time
-- No submission required - filtering is immediate
-- Persists across tab switches
-- Clear placeholder text guides user intent
+- Search activates after typing 3 characters
+- Loading spinner appears immediately when typing
+- 800ms delay before results update (smooth, progressive updates)
+- Results appear in dropdown below search box
+- Each result shows image thumbnail, name, category, location, and rating
+- Click result to navigate to detail page
+- Click outside dropdown to close
+- Results persist while search box is focused
+- Clear visual feedback during loading and empty states
+- Smooth fade-in animation for dropdown appearance
 
 ---
 
