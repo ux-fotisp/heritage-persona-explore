@@ -186,7 +186,7 @@ export function getPersonaMatchCounts(sites: BaseHeritageSite[]): Record<string,
   return counts;
 }
 
-// Filter sites by persona IDs
+// Filter sites by persona IDs - includes direct match and category affinity
 export function filterSitesByPersonas(
   sites: ScoredSite[],
   activePersonaIds: string[]
@@ -194,11 +194,22 @@ export function filterSitesByPersonas(
   if (activePersonaIds.length === 0) return sites;
 
   return sites.filter((site) =>
-    activePersonaIds.some(
-      (personaId) =>
-        site.personas.includes(personaId) ||
-        site.matchedPersonaIds.includes(personaId)
-    )
+    activePersonaIds.some((personaId) => {
+      // Direct persona match from site data
+      if (site.personas.includes(personaId)) return true;
+      
+      // Match from scoring engine
+      if (site.matchedPersonaIds.includes(personaId)) return true;
+      
+      // Category affinity match - check if site's category aligns with persona
+      const definition = getPersonaDefinition(personaId);
+      if (definition) {
+        if (definition.highAffinityCategories.includes(site.category)) return true;
+        if (definition.mediumAffinityCategories.includes(site.category)) return true;
+      }
+      
+      return false;
+    })
   );
 }
 
