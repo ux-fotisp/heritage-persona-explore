@@ -13,6 +13,8 @@ interface PersonaCardProps {
   icon: string;
   value: number;
   onChange: (value: number) => void;
+  onInteract?: () => void;
+  isInteracted?: boolean;
   className?: string;
 }
 
@@ -25,6 +27,8 @@ export function PersonaCard({
   icon,
   value,
   onChange,
+  onInteract,
+  isInteracted = false,
   className
 }: PersonaCardProps) {
   const [isExpanded, setIsExpanded] = useState(true); // Start expanded
@@ -45,11 +49,23 @@ export function PersonaCard({
     return "bg-success/20 text-success-foreground";
   };
 
+  // Handle slider interaction - mark as interacted even if value stays at 0
+  const handleSliderChange = (values: number[]) => {
+    onChange(values[0]);
+  };
+
+  const handleSliderPointerDown = () => {
+    // Mark as interacted when user touches/clicks the slider
+    if (onInteract && !isInteracted) {
+      onInteract();
+    }
+  };
+
   return (
     <Card 
       className={cn(
         "transition-all duration-300 border border-border bg-card hover:shadow-card",
-        Math.abs(value) > 0 && "ring-1 ring-primary/30 border-primary/20 bg-primary/[0.02]",
+        isInteracted && "ring-1 ring-primary/30 border-primary/20 bg-primary/[0.02]",
         className
       )}
     >
@@ -143,7 +159,8 @@ export function PersonaCard({
             <div className="relative">
               <Slider
                 value={[value]}
-                onValueChange={(values) => onChange(values[0])}
+                onValueChange={handleSliderChange}
+                onPointerDown={handleSliderPointerDown}
                 max={5}
                 min={-5}
                 step={1}
