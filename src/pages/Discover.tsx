@@ -1,90 +1,127 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { SiteCard } from "@/components/heritage/SiteCard";
 import { BottomNav } from "@/components/navigation/BottomNav";
 import { AppHeader } from "@/components/navigation/AppHeader";
-import { Search, Filter, MapPin } from "lucide-react";
-import heritageTemple from "@/assets/heritage-temple.jpg";
-import heritageMuseum from "@/assets/heritage-museum.jpg";
-import heritageCastle from "@/assets/heritage-castle.jpg";
-
-// Mock cultural heritage sites data
-const heritageSites = [
-  {
-    id: "1",
-    name: "Ancient Temple of Serenity",
-    description: "A beautifully preserved temple complex dating back to the 12th century, featuring intricate stone carvings and peaceful meditation gardens.",
-    image: heritageTemple,
-    location: "Kyoto, Japan",
-    duration: "2-3 hours",
-    category: "Religious Heritage",
-    accessibility: "Medium" as const,
-    rating: 4.8,
-    matchScore: 92
-  },
-  {
-    id: "2", 
-    name: "National Archaeological Museum",
-    description: "World-renowned collection spanning 5,000 years of human history, with interactive exhibits and guided tours available.",
-    image: heritageMuseum,
-    location: "Athens, Greece",
-    duration: "3-4 hours", 
-    category: "Museum",
-    accessibility: "High" as const,
-    rating: 4.7,
-    matchScore: 89
-  },
-  {
-    id: "3",
-    name: "Medieval Castle Fortress",
-    description: "A stunning example of medieval architecture perched on a hilltop, offering panoramic views and rich historical narratives.",
-    image: heritageCastle,
-    location: "Edinburgh, Scotland",
-    duration: "2-3 hours",
-    category: "Historical Site",
-    accessibility: "Low" as const,
-    rating: 4.6,
-    matchScore: 85
-  }
-];
+import { PersonaFilterBar } from "@/components/discover/PersonaFilterBar";
+import { Search, Filter, MapPin, Sparkles } from "lucide-react";
+import { HERITAGE_SITES } from "@/data/heritageSites";
+import {
+  getPersonaRecommendations,
+  getPersonaMatchCounts,
+  filterSitesByPersonas,
+  getUserPersonas,
+  ScoredSite,
+} from "@/lib/recommendationEngine";
 
 const categories = [
   "All Sites",
-  "Museums", 
+  "Museums",
   "Religious Heritage",
   "Historical Sites",
   "Archaeological Sites",
   "Cultural Landscapes",
-  "Traditional Crafts"
+  "Traditional Crafts",
 ];
 
 export default function Discover() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Sites");
-  const [sites] = useState(heritageSites);
+  const [activePersonaFilters, setActivePersonaFilters] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<"match" | "rating" | "name">("match");
 
-  const filteredSites = sites.filter(site => {
-    const matchesSearch = site.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         site.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         site.location.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesCategory = selectedCategory === "All Sites" || 
-                           site.category.toLowerCase().includes(selectedCategory.toLowerCase().replace("s", ""));
-    
-    return matchesSearch && matchesCategory;
-  });
+  // Get user personas from storage
+  const { primary: userPersona, all: userPersonas } = useMemo(
+    () => getUserPersonas(),
+    []
+  );
+
+  // Calculate recommendations with scores
+  const scoredSites = useMemo(
+    () => getPersonaRecommendations(HERITAGE_SITES, userPersona),
+    [userPersona]
+  );
+
+  // Get match counts for each persona
+  const matchCounts = useMemo(
+    () => getPersonaMatchCounts(HERITAGE_SITES),
+    []
+  );
+
+  // Apply all filters
+  const filteredSites = useMemo(() => {
+    let result = [...scoredSites];
+
+    // Apply persona filters
+    if (activePersonaFilters.length > 0) {
+      result = filterSitesByPersonas(result, activePersonaFilters);
+    }
+
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (site) =>
+          site.name.toLowerCase().includes(query) ||
+          site.description.toLowerCase().includes(query) ||
+          site.city.toLowerCase().includes(query) ||
+          site.country.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply category filter
+    if (selectedCategory !== "All Sites") {
+      result = result.filter((site) =>
+        site.category.toLowerCase().includes(
+          selectedCategory.toLowerCase().replace("s", "").replace("ical", "")
+        )
+      );
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case "rating":
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      case "name":
+        result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "match":
+      default:
+        result.sort((a, b) => b.matchScore - a.matchScore);
+    }
+
+    return result;
+  }, [scoredSites, activePersonaFilters, searchQuery, selectedCategory, sortBy]);
+
+  // Get top recommendations (>80% match)
+  const topRecommendations = useMemo(
+    () => filteredSites.filter((site) => site.matchScore >= 80).slice(0, 4),
+    [filteredSites]
+  );
+
+  const handleTogglePersonaFilter = (personaId: string) => {
+    setActivePersonaFilters((prev) =>
+      prev.includes(personaId)
+        ? prev.filter((id) => id !== personaId)
+        : [...prev, personaId]
+    );
+  };
+
+  const handleClearFilters = () => {
+    setActivePersonaFilters([]);
+  };
 
   const handleAddToTrip = (siteId: string) => {
-    // TODO: Implement add to trip functionality
     console.log("Added site to trip:", siteId);
   };
 
   return (
     <div className="min-h-screen bg-background">
       <AppHeader showBackButton={false} title="Discover" />
-      <div className="container max-w-4xl mx-auto px-4 py-6 pb-20">
+      <div className="container max-w-4xl mx-auto px-4 py-6 pb-24">
         {/* Header */}
         <div className="space-y-6">
           <div className="text-center space-y-2">
@@ -92,7 +129,9 @@ export default function Discover() {
               Discover Cultural Heritage
             </h1>
             <p className="text-muted-foreground">
-              Personalized recommendations based on your cultural persona
+              {userPersona
+                ? "Personalized recommendations based on your cultural persona"
+                : "Explore heritage sites and find your cultural match"}
             </p>
           </div>
 
@@ -109,6 +148,16 @@ export default function Discover() {
               />
             </div>
 
+            {/* Persona Filter Bar with Glass Effects */}
+            <PersonaFilterBar
+              activeFilters={activePersonaFilters}
+              matchCounts={matchCounts}
+              userPersonas={userPersonas}
+              onToggleFilter={handleTogglePersonaFilter}
+              onClearFilters={handleClearFilters}
+            />
+
+            {/* Category and Sort Controls */}
             <div className="flex items-center gap-3 overflow-x-auto pb-2">
               <Button variant="outline" size="sm">
                 <Filter className="h-4 w-4" />
@@ -122,7 +171,9 @@ export default function Discover() {
                 {categories.map((category) => (
                   <Badge
                     key={category}
-                    variant={selectedCategory === category ? "default" : "secondary"}
+                    variant={
+                      selectedCategory === category ? "default" : "secondary"
+                    }
                     className="cursor-pointer whitespace-nowrap"
                     onClick={() => setSelectedCategory(category)}
                   >
@@ -133,24 +184,88 @@ export default function Discover() {
             </div>
           </div>
 
+          {/* Top Recommendations Section */}
+          {topRecommendations.length > 0 && activePersonaFilters.length === 0 && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-foreground">
+                  Perfect Matches for You
+                </h2>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                {topRecommendations.slice(0, 2).map((site, index) => (
+                  <div
+                    key={site.id}
+                    className="animate-slide-up-fade"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <SiteCard
+                      id={site.id}
+                      name={site.name}
+                      description={site.description}
+                      image={site.image}
+                      location={`${site.city}, ${site.country}`}
+                      duration={site.duration}
+                      category={site.category}
+                      accessibility="High"
+                      rating={site.rating}
+                      matchScore={site.matchScore}
+                      matchedPersonas={site.matchedPersonaIds}
+                      isRecommended={site.isRecommended}
+                      onAddToTrip={() => handleAddToTrip(site.id)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Results Header */}
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-foreground">
               {filteredSites.length} Sites Found
             </h2>
-            <p className="text-sm text-muted-foreground">
-              Sorted by personality match
-            </p>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Sort by:</span>
+              <select
+                value={sortBy}
+                onChange={(e) =>
+                  setSortBy(e.target.value as "match" | "rating" | "name")
+                }
+                className="text-sm bg-secondary text-secondary-foreground rounded-md px-2 py-1 border-none focus:ring-2 focus:ring-primary"
+              >
+                <option value="match">Best Match</option>
+                <option value="rating">Highest Rated</option>
+                <option value="name">Name A-Z</option>
+              </select>
+            </div>
           </div>
 
           {/* Heritage Sites Grid */}
           <div className="grid gap-6 md:grid-cols-2">
-            {filteredSites.map((site) => (
-              <SiteCard
+            {filteredSites.map((site, index) => (
+              <div
                 key={site.id}
-                {...site}
-                onAddToTrip={() => handleAddToTrip(site.id)}
-              />
+                className="animate-slide-up-fade"
+                style={{ animationDelay: `${(index % 6) * 50}ms` }}
+              >
+                <SiteCard
+                  id={site.id}
+                  name={site.name}
+                  description={site.description}
+                  image={site.image}
+                  location={`${site.city}, ${site.country}`}
+                  duration={site.duration}
+                  category={site.category}
+                  accessibility="Medium"
+                  rating={site.rating}
+                  matchScore={site.matchScore}
+                  matchedPersonas={site.matchedPersonaIds}
+                  isRecommended={site.isRecommended}
+                  onAddToTrip={() => handleAddToTrip(site.id)}
+                />
+              </div>
             ))}
           </div>
 
@@ -161,8 +276,18 @@ export default function Discover() {
                 No sites found
               </h3>
               <p className="text-muted-foreground">
-                Try adjusting your search or filters to discover more heritage sites.
+                Try adjusting your search or filters to discover more heritage
+                sites.
               </p>
+              {activePersonaFilters.length > 0 && (
+                <Button
+                  variant="outline"
+                  className="mt-4"
+                  onClick={handleClearFilters}
+                >
+                  Clear persona filters
+                </Button>
+              )}
             </div>
           )}
         </div>
