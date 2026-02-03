@@ -20,8 +20,8 @@ export function GlassPersonaChip({
     <button
       onClick={onClick}
       className={cn(
-        "relative flex flex-col items-center gap-1 px-4 py-3 rounded-xl",
-        "min-w-[100px] transition-all duration-300 ease-out",
+        "relative flex flex-col items-center gap-1.5 px-5 py-4 rounded-xl",
+        "min-w-[120px] transition-all duration-300 ease-out flex-shrink-0",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         // Glass effect base
         "backdrop-blur-xl border",
@@ -40,7 +40,7 @@ export function GlassPersonaChip({
       )}
 
       {/* Icon */}
-      <span className="text-2xl" role="img" aria-hidden="true">
+      <span className="text-3xl" role="img" aria-hidden="true">
         {persona.icon}
       </span>
 

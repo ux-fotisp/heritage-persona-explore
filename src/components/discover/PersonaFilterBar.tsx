@@ -70,7 +70,7 @@ export function PersonaFilterBar({
         <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
-        <div className="flex gap-3 overflow-x-auto pb-2 px-1 scrollbar-hide">
+        <div className="flex gap-3 overflow-x-auto pb-2 px-2 scrollbar-hide scroll-smooth snap-x snap-mandatory">
           {sortedPersonas.map((persona) => (
             <GlassPersonaChip
               key={persona.id}
