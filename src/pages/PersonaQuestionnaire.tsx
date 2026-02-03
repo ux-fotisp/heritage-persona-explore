@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/navigation/AppHeader";
 import { PersonaCard } from "@/components/onboarding/PersonaCard";
 import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 
 interface PersonaData {
   id: string;
@@ -217,6 +218,11 @@ export default function PersonaQuestionnaire() {
     setHasInteracted(prev => new Set([...prev, id]));
   };
 
+  // Mark as interacted without changing value (for neutral/zero acceptance)
+  const markAsInteracted = (id: string) => {
+    setHasInteracted(prev => new Set([...prev, id]));
+  };
+
   const handleComplete = () => {
     const sortedPersonas = [...personas].sort((a, b) => b.value - a.value);
     const topPersonas = sortedPersonas.slice(0, 3); // Show top 3 for better selection
@@ -253,20 +259,39 @@ export default function PersonaQuestionnaire() {
           </div>
         </div>
 
-        {/* Progress Section */}
+        {/* Enhanced Progress Section */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-foreground">Your Progress</span>
-            <span className="text-sm font-medium text-primary">
-              {hasInteracted.size}/{personas.length}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">
+                {hasInteracted.size} of {personas.length} rated
+              </span>
+              <span className={cn(
+                "text-sm font-bold px-2 py-0.5 rounded-full transition-colors",
+                allCompleted 
+                  ? "bg-sage/20 text-sage" 
+                  : progress > 50 
+                    ? "bg-olive/20 text-olive" 
+                    : "bg-coral/20 text-coral"
+              )}>
+                {Math.round(progress)}%
+              </span>
+            </div>
           </div>
-          <Progress value={progress} className="h-2 bg-muted" />
+          <Progress 
+            value={progress} 
+            variant="enhanced" 
+            showSteps 
+            totalSteps={personas.length} 
+            currentStep={hasInteracted.size}
+            className="h-3"
+          />
         </div>
       </div>
 
       {/* Personas List */}
-      <div className="px-4 space-y-4 pb-24">
+      <div className="px-4 space-y-4 pb-48">
         {personas.map((persona) => (
           <PersonaCard
             key={persona.id}
@@ -278,23 +303,37 @@ export default function PersonaQuestionnaire() {
             icon={persona.icon}
             value={persona.value}
             onChange={(value) => updatePersonaValue(persona.id, value)}
+            onInteract={() => markAsInteracted(persona.id)}
+            isInteracted={hasInteracted.has(persona.id)}
           />
         ))}
       </div>
 
-      {/* Bottom CTA - Fixed */}
-      <div className={`${allCompleted ? 'fixed bottom-8' : 'fixed bottom-0'} left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border p-4`}>
-        <Button
-          onClick={handleComplete}
-          disabled={!allCompleted}
-          className="w-full py-4 text-base font-semibold rounded-full h-auto transition-smooth"
-          variant={allCompleted ? "default" : "secondary"}
-        >
-          {allCompleted 
-            ? "Create My Travel Persona" 
-            : `Complete ${personas.length - hasInteracted.size} more to continue`
-          }
-        </Button>
+      {/* Bottom CTA - Fixed with more space and footer */}
+      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background to-background/80 pt-6 pb-8">
+        <div className="px-4 space-y-4">
+          <Button
+            onClick={handleComplete}
+            disabled={!allCompleted}
+            className="w-full py-5 text-base font-semibold rounded-full h-auto transition-smooth shadow-button"
+            variant={allCompleted ? "default" : "secondary"}
+          >
+            {allCompleted 
+              ? "Create My Travel Persona" 
+              : `Complete ${personas.length - hasInteracted.size} more to continue`
+            }
+          </Button>
+          
+          {/* Footer */}
+          <div className="text-center space-y-1">
+            <p className="text-xs text-muted-foreground">
+              Your persona helps us personalize your cultural experiences
+            </p>
+            <p className="text-xs text-muted-foreground/60">
+              You can update your preferences anytime in your profile
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
