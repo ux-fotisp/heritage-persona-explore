@@ -99,12 +99,12 @@ export default function Discover() {
             <PersonaFilterBar activeFilters={activePersonaFilters} matchCounts={matchCounts} userPersonas={userPersonas} onToggleFilter={handleTogglePersonaFilter} onClearFilters={handleClearFilters} />
 
             {/* Category and Sort Controls */}
-            <div className="flex items-center gap-3 overflow-x-auto pb-2">
-              <Button variant="outline" size="sm">
+            <div className="flex items-center gap-4 overflow-x-auto pb-2">
+              <Button variant="outline" size="sm" className="px-4 py-2.5">
                 <Filter className="h-4 w-4" />
                 Filter
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="px-4 py-2.5">
                 <MapPin className="h-4 w-4" />
                 Nearby
               </Button>
