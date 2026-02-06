@@ -419,11 +419,10 @@ if (persona?.selectedPersonas.includes('archaeologist')) {
 ```typescript
 // Scoring factors and weights
 const SCORING_WEIGHTS = {
-  directPersonaMatch: 40,    // Site explicitly tagged for persona
-  highAffinityCategory: 30,  // Category strongly aligned
-  mediumAffinityCategory: 15,// Category moderately aligned
-  ratingBonus: 10,           // Highly-rated sites get boost
-  accessibilityBonus: 5      // Accessible sites preferred
+  directPersonaMatch: 50,    // Site explicitly tagged for persona
+  highAffinityCategory: 35,  // Category strongly aligned
+  mediumAffinityCategory: 20,// Category moderately aligned
+  ratingBonus: 15,           // Highly-rated sites get boost
 };
 ```
 
@@ -555,26 +554,21 @@ The recommendation engine calculates a **match score (0-100%)** for each heritag
 │   SCORING FACTORS                                                │
 │   ───────────────                                                │
 │                                                                  │
-│   1. Direct Persona Match (40 points max)                        │
+│   1. Direct Persona Match (50 points max)                        │
 │      └─► Site.personas includes Persona.id                       │
 │                                                                  │
-│   2. Category Affinity (30 points max)                           │
+│   2. Category Affinity (35 points max)                           │
 │      └─► Site.category in Persona.highAffinityCategories         │
-│          └─► High: 30pts | Medium: 15pts | Low: 0pts             │
+│          └─► High: 35pts | Medium: 20pts | Low: 0pts             │
 │                                                                  │
 │   3. Rating Bonus (15 points max)                                │
-│      └─► Site.rating >= 4.5: 15pts                               │
-│      └─► Site.rating >= 4.0: 10pts                               │
-│      └─► Site.rating >= 3.5: 5pts                                │
-│                                                                  │
-│   4. Trait Alignment (15 points max)                             │
-│      └─► Overlap between Persona.traits and Site.tags            │
+│      └─► (Site.rating - 4.0) × 15                                │
 │                                                                  │
 │   OUTPUT                                                         │
 │   ──────                                                         │
 │   • matchScore: number (0-100)                                   │
 │   • matchedPersonaIds: string[]                                  │
-│   • isRecommended: boolean (score >= 70)                         │
+│   • isRecommended: boolean (score >= 75)                         │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
@@ -585,18 +579,15 @@ The recommendation engine calculates a **match score (0-100%)** for each heritag
 const PERSONA_CATEGORY_AFFINITY: Record<string, CategoryAffinity> = {
   archaeologist: {
     high: ['Archaeological Site', 'Museum', 'Historic District'],
-    medium: ['Fortress', 'Religious Site'],
-    low: ['Performing Arts', 'Food Heritage']
+    medium: ['Fortress', 'Cultural Experience'],
   },
   'religious-seeker': {
-    high: ['Religious Site', 'Sacred Space'],
-    medium: ['Historic District', 'Museum'],
-    low: ['Maritime Heritage', 'Performing Arts']
+    high: ['Religious Site'],
+    medium: ['Historic District', 'Cultural Experience'],
   },
   'art-seeker': {
     high: ['Museum', 'Performing Arts', 'Cultural Experience'],
-    medium: ['Historic District', 'Archaeological Site'],
-    low: ['Fortress', 'Food Heritage']
+    medium: ['Traditional Crafts', 'Historic District'],
   },
   // ... remaining personas
 };
@@ -625,8 +616,8 @@ export const filterSitesByPersonas = (
       // Category affinity match
       const persona = getPersonaDefinition(personaId);
       const siteCategory = site.category;
-      return persona?.categoryAffinities.high.includes(siteCategory) ||
-             persona?.categoryAffinities.medium.includes(siteCategory);
+      return persona?.highAffinityCategories.includes(siteCategory) ||
+             persona?.mediumAffinityCategories.includes(siteCategory);
     });
   });
 };
@@ -748,59 +739,4 @@ screens: {
 
 ---
 
-## Appendix: File Structure
-
-```
-src/
-├── components/
-│   ├── auth/                    # Authentication components
-│   │   ├── LoginModal.tsx
-│   │   ├── ProtectedRoute.tsx
-│   │   └── UserDropdown.tsx
-│   ├── discover/                # Discovery page components
-│   │   ├── GlassPersonaChip.tsx
-│   │   ├── MatchScoreBadge.tsx
-│   │   └── PersonaFilterBar.tsx
-│   ├── heritage/                # Heritage site components
-│   │   └── SiteCard.tsx
-│   ├── navigation/              # Navigation components
-│   │   ├── AppHeader.tsx
-│   │   ├── BottomNav.tsx
-│   │   └── BurgerMenu.tsx
-│   ├── planner/                 # Trip planning components
-│   ├── profile/                 # Profile components
-│   ├── study/                   # Research study components
-│   └── ui/                      # shadcn/ui base components
-├── data/
-│   └── heritageSites.ts         # Static heritage site dataset
-├── hooks/
-│   ├── useAuth.tsx              # Authentication hook
-│   ├── useMobile.tsx            # Responsive detection
-│   └── useNotifications.tsx     # Toast notifications
-├── lib/
-│   ├── recommendationEngine.ts  # Persona matching algorithm
-│   ├── personaStorage.ts        # Persona persistence
-│   ├── tripStorage.ts           # Trip data management
-│   └── utils.ts                 # Shared utilities
-├── pages/
-│   ├── Index.tsx                # Landing page
-│   ├── Discover.tsx             # Site discovery
-│   ├── Profile.tsx              # User profile
-│   ├── Planner.tsx              # Trip planning
-│   └── ...                      # Other pages
-└── assets/                      # Static images
-```
-
----
-
-## References
-
-1. Konstantakis, M. et al. (2019). "Understanding Cultural Heritage Visitors: A Typology Approach"
-2. Sophia Pratt & Associates. (2020). "Object-Oriented UX Methodology"
-3. Nielsen Norman Group. (2021). "Cognitive Load Theory in UX Design"
-4. Lovable Documentation. (2024). https://docs.lovable.dev
-
----
-
-*Documentation compiled as part of the CulturaPath academic research project.*
-*Last updated: February 2025*
+*Development process documentation for CulturaPath academic research project*
