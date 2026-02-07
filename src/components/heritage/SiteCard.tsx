@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -5,6 +6,7 @@ import { MapPin, Clock, Star, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MatchScoreBadge } from "@/components/discover/MatchScoreBadge";
 import { getPersonaDefinition } from "@/lib/recommendationEngine";
+import { AddToTripModal } from "@/components/trip/AddToTripModal";
 
 interface SiteCardProps {
   id: string;
@@ -19,7 +21,7 @@ interface SiteCardProps {
   matchScore: number;
   matchedPersonas?: string[];
   isRecommended?: boolean;
-  onAddToTrip: () => void;
+  onAddToTrip?: () => void;
   onRate?: () => void;
   className?: string;
 }
@@ -41,6 +43,7 @@ export function SiteCard({
   onRate,
   className,
 }: SiteCardProps) {
+  const [showTripModal, setShowTripModal] = useState(false);
   const getAccessibilityColor = (level: string) => {
     switch (level) {
       case "High":
@@ -158,12 +161,23 @@ export function SiteCard({
             <Star className="h-4 w-4 mr-2" />
             Rate
           </Button>
-          <Button variant="outline" className="w-full" onClick={onAddToTrip}>
+          <Button 
+            variant="outline" 
+            className="w-full" 
+            onClick={() => setShowTripModal(true)}
+          >
             <Plus className="h-4 w-4" />
             Add to Trip
           </Button>
         </div>
       </CardFooter>
+
+      <AddToTripModal
+        open={showTripModal}
+        onOpenChange={setShowTripModal}
+        siteId={id}
+        siteName={name}
+      />
     </Card>
   );
 }

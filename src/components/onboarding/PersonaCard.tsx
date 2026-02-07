@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -49,16 +48,27 @@ export function PersonaCard({
     return "bg-success/20 text-success-foreground";
   };
 
-  // Handle slider interaction - mark as interacted even if value stays at 0
-  const handleSliderChange = (values: number[]) => {
-    onChange(values[0]);
-  };
-
-  const handleSliderPointerDown = () => {
-    // Mark as interacted when user touches/clicks the slider
+  // Handle clicking on a scale value
+  const handleScaleClick = (selectedValue: number) => {
+    onChange(selectedValue);
     if (onInteract && !isInteracted) {
       onInteract();
     }
+  };
+
+  // Scale values from -5 to 5
+  const scaleValues = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+
+  // Get color for each scale value based on position
+  const getScaleValueColor = (val: number, isSelected: boolean) => {
+    if (!isSelected) {
+      return "bg-muted/50 text-muted-foreground hover:bg-muted";
+    }
+    if (val <= -3) return "bg-destructive text-destructive-foreground";
+    if (val <= -1) return "bg-coral text-white";
+    if (val === 0) return "bg-muted text-foreground";
+    if (val <= 2) return "bg-primary/80 text-primary-foreground";
+    return "bg-sage text-white";
   };
 
   return (
@@ -141,9 +151,9 @@ export function PersonaCard({
           </div>
         )}
 
-        {/* Slider Section */}
+        {/* Scale Selection Section */}
         {isExpanded && (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-foreground">
                 How much do you relate to this?
@@ -156,32 +166,53 @@ export function PersonaCard({
               </div>
             </div>
             
-            <div className="relative">
-              <Slider
-                value={[value]}
-                onValueChange={handleSliderChange}
-                onPointerDown={handleSliderPointerDown}
-                max={5}
-                min={-5}
-                step={1}
-                className="w-full"
-                onClick={(e) => e.stopPropagation()}
-              />
+            {/* Numbered Scale Choices */}
+            <div className="space-y-2">
+              <div className="grid grid-cols-11 gap-1">
+                {scaleValues.map((scaleValue) => (
+                  <button
+                    key={scaleValue}
+                    type="button"
+                    onClick={() => handleScaleClick(scaleValue)}
+                    className={cn(
+                      "flex flex-col items-center justify-center py-2 px-0.5 rounded-lg transition-all duration-200 min-h-[56px]",
+                      "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1",
+                      getScaleValueColor(scaleValue, value === scaleValue),
+                      value === scaleValue 
+                        ? "ring-2 ring-primary/50 shadow-md scale-105" 
+                        : "hover:scale-102"
+                    )}
+                    aria-label={`Rate ${scaleValue}`}
+                    aria-pressed={value === scaleValue}
+                  >
+                    <span className={cn(
+                      "text-xs font-bold",
+                      value === scaleValue ? "text-current" : "text-muted-foreground"
+                    )}>
+                      {scaleValue > 0 ? `+${scaleValue}` : scaleValue}
+                    </span>
+                    {/* Visual indicator dot */}
+                    <span className={cn(
+                      "w-2 h-2 rounded-full mt-1 transition-colors",
+                      value === scaleValue 
+                        ? "bg-current opacity-80" 
+                        : "bg-muted-foreground/30"
+                    )} />
+                  </button>
+                ))}
+              </div>
               
-              {/* Scale markers and labels */}
-              <div className="flex justify-between items-center mt-3 px-1">
-                <div className="flex flex-col items-start">
-                  <span className="text-xs text-muted-foreground">-5</span>
-                  <span className="text-xs text-muted-foreground font-medium">Strongly Dislike</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-xs text-muted-foreground">0</span>
-                  <span className="text-xs text-muted-foreground font-medium">Neutral</span>
-                </div>
-                <div className="flex flex-col items-end">
-                  <span className="text-xs text-muted-foreground">5</span>
-                  <span className="text-xs text-muted-foreground font-medium">Strongly Like</span>
-                </div>
+              {/* Scale labels */}
+              <div className="flex justify-between items-center px-1">
+                <span className="text-xs text-muted-foreground font-medium">
+                  Strongly Dislike
+                </span>
+                <span className="text-xs text-muted-foreground font-medium">
+                  Neutral
+                </span>
+                <span className="text-xs text-muted-foreground font-medium">
+                  Strongly Like
+                </span>
               </div>
             </div>
           </div>
