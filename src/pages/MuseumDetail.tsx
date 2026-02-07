@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { getPersona } from "@/lib/personaStorage";
 import { toast } from "sonner";
+import { AddToTripModal } from "@/components/trip/AddToTripModal";
 
 // ACUX Typology Personas for Cultural Heritage
 const ACUX_PERSONAS = {
@@ -115,6 +116,10 @@ export default function MuseumDetail() {
   const navigate = useNavigate();
   const [userPersona, setUserPersona] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [showTripModal, setShowTripModal] = useState(false);
+  
+  // Hardcoded site ID for the National Archaeological Museum
+  const siteId = "national-archaeological-museum";
 
   useEffect(() => {
     const persona = getPersona();
@@ -124,9 +129,7 @@ export default function MuseumDetail() {
   }, []);
 
   const handleAddToTrip = () => {
-    toast.success("Added to your trip planner", {
-      description: "National Archaeological Museum has been added to your itinerary"
-    });
+    setShowTripModal(true);
   };
 
   const handleShare = async () => {
@@ -528,6 +531,13 @@ export default function MuseumDetail() {
           </div>
         </section>
       </div>
+
+      <AddToTripModal
+        open={showTripModal}
+        onOpenChange={setShowTripModal}
+        siteId={siteId}
+        siteName="National Archaeological Museum"
+      />
     </div>
   );
 }

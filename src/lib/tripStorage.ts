@@ -145,3 +145,69 @@ export const clearAllTrips = (): void => {
     console.error('Error clearing trips:', error);
   }
 };
+
+// Site management functions
+export const addSiteToTrip = (tripId: string, siteId: string): boolean => {
+  try {
+    const trip = getTripById(tripId);
+    if (!trip) return false;
+    
+    // Initialize selectedSites if not exists
+    if (!trip.selectedSites) {
+      trip.selectedSites = [];
+    }
+    
+    // Check if site already exists
+    if (trip.selectedSites.includes(siteId)) {
+      return false;
+    }
+    
+    trip.selectedSites.push(siteId);
+    saveTrip(trip);
+    return true;
+  } catch (error) {
+    console.error('Error adding site to trip:', error);
+    return false;
+  }
+};
+
+export const removeSiteFromTrip = (tripId: string, siteId: string): boolean => {
+  try {
+    const trip = getTripById(tripId);
+    if (!trip || !trip.selectedSites) return false;
+    
+    const index = trip.selectedSites.indexOf(siteId);
+    if (index === -1) return false;
+    
+    trip.selectedSites.splice(index, 1);
+    saveTrip(trip);
+    return true;
+  } catch (error) {
+    console.error('Error removing site from trip:', error);
+    return false;
+  }
+};
+
+export const isSiteInTrip = (tripId: string, siteId: string): boolean => {
+  try {
+    const trip = getTripById(tripId);
+    if (!trip || !trip.selectedSites) return false;
+    
+    return trip.selectedSites.includes(siteId);
+  } catch (error) {
+    console.error('Error checking site in trip:', error);
+    return false;
+  }
+};
+
+export const getSiteCountForTrip = (tripId: string): number => {
+  try {
+    const trip = getTripById(tripId);
+    if (!trip || !trip.selectedSites) return 0;
+    
+    return trip.selectedSites.length;
+  } catch (error) {
+    console.error('Error getting site count:', error);
+    return 0;
+  }
+};

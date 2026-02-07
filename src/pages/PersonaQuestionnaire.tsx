@@ -239,28 +239,9 @@ export default function PersonaQuestionnaire() {
     <div className="min-h-screen bg-background font-manrope">
       <AppHeader backPath="/onboarding" />
       
-      {/* Header Section with Progress */}
-      <div className="px-4 pt-4 pb-6 space-y-6">
-        {/* Title Section */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-            <span className="text-primary font-medium text-sm">My Travel Persona</span>
-          </div>
-          
-          <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-foreground leading-tight">
-              Discover your{" "}
-              <span className="text-primary">Travel Style</span>
-            </h1>
-            
-            <p className="text-muted-foreground text-sm leading-relaxed max-w-sm mx-auto">
-              Let's shape your travel persona so we can match you with heritage sites that truly fit your style. Take a moment to reflect on each travel persona. Which ones feel most like you—and which don't? Your ratings will help us fine-tune your cultural journey to match what truly resonates with you.
-            </p>
-          </div>
-        </div>
-
-        {/* Enhanced Progress Section */}
-        <div className="space-y-3">
+      {/* Sticky Progress Section */}
+      <div className="sticky top-[56px] z-30 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
+        <div className="space-y-3 max-w-lg mx-auto">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-foreground">Your Progress</span>
             <div className="flex items-center gap-2">
@@ -287,6 +268,27 @@ export default function PersonaQuestionnaire() {
             currentStep={hasInteracted.size}
             className="h-3"
           />
+        </div>
+      </div>
+      
+      {/* Header Section */}
+      <div className="px-4 pt-4 pb-6 space-y-4">
+        {/* Title Section */}
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+            <span className="text-primary font-medium text-sm">My Travel Persona</span>
+          </div>
+          
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-foreground leading-tight">
+              Discover your{" "}
+              <span className="text-primary">Travel Style</span>
+            </h1>
+            
+            <p className="text-muted-foreground text-sm leading-relaxed max-w-sm mx-auto">
+              Let's shape your travel persona so we can match you with heritage sites that truly fit your style. Take a moment to reflect on each travel persona. Which ones feel most like you—and which don't? Your ratings will help us fine-tune your cultural journey to match what truly resonates with you.
+            </p>
+          </div>
         </div>
       </div>
 
