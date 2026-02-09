@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/navigation/AppHeader";
@@ -208,8 +208,18 @@ export default function PersonaQuestionnaire() {
   const [personas, setPersonas] = useState<PersonaData[]>(initialPersonas);
   const [hasInteracted, setHasInteracted] = useState<Set<string>>(new Set());
   
+  const [isCompact, setIsCompact] = useState(false);
+  
   const progress = (hasInteracted.size / personas.length) * 100;
   const allCompleted = hasInteracted.size === personas.length;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsCompact(window.scrollY > 100);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const updatePersonaValue = (id: string, value: number) => {
     setPersonas(prev => prev.map(persona => 
@@ -237,36 +247,44 @@ export default function PersonaQuestionnaire() {
 
   return (
     <div className="min-h-screen bg-background font-manrope">
-      <AppHeader backPath="/onboarding" />
+      {/* Sticky AppHeader */}
+      <div className="sticky top-0 z-40">
+        <AppHeader backPath="/onboarding" />
+      </div>
       
-      {/* Sticky Progress Section */}
-      <div className="sticky top-[56px] z-30 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
-        <div className="space-y-3 max-w-lg mx-auto">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-foreground">Your Progress</span>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">
-                {hasInteracted.size} of {personas.length} rated
-              </span>
-              <span className={cn(
-                "text-sm font-bold px-2 py-0.5 rounded-full transition-colors",
-                allCompleted 
-                  ? "bg-sage/20 text-sage" 
-                  : progress > 50 
-                    ? "bg-olive/20 text-olive" 
-                    : "bg-coral/20 text-coral"
-              )}>
-                {Math.round(progress)}%
-              </span>
+      {/* Sticky Progress Section - compact on scroll */}
+      <div className={cn(
+        "sticky top-[56px] z-30 bg-background/95 backdrop-blur-sm border-b border-border px-4 transition-all duration-300",
+        isCompact ? "py-1.5" : "py-3"
+      )}>
+        <div className={cn("max-w-lg mx-auto", isCompact ? "space-y-0" : "space-y-3")}>
+          {!isCompact && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-foreground">Your Progress</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">
+                  {hasInteracted.size} of {personas.length} rated
+                </span>
+                <span className={cn(
+                  "text-sm font-bold px-2 py-0.5 rounded-full transition-colors",
+                  allCompleted 
+                    ? "bg-sage/20 text-sage" 
+                    : progress > 50 
+                      ? "bg-olive/20 text-olive" 
+                      : "bg-coral/20 text-coral"
+                )}>
+                  {Math.round(progress)}%
+                </span>
+              </div>
             </div>
-          </div>
+          )}
           <Progress 
             value={progress} 
             variant="enhanced" 
-            showSteps 
+            showSteps={!isCompact}
             totalSteps={personas.length} 
             currentStep={hasInteracted.size}
-            className="h-3"
+            className={cn("transition-all duration-300", isCompact ? "h-2" : "h-3")}
           />
         </div>
       </div>
@@ -293,7 +311,7 @@ export default function PersonaQuestionnaire() {
       </div>
 
       {/* Personas List */}
-      <div className="px-4 space-y-4 pb-48">
+      <div className="px-4 space-y-4 pb-[180px]">
         {personas.map((persona) => (
           <PersonaCard
             key={persona.id}
